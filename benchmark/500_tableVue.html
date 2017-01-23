@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+  <head>
+    <title>Kamas World</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="../FileSaver.min.js"></script>
+    <script src="../vue/three.js"></script>
+
+
+  </head>
+  <body>
+    <script src="../config.js"></script>
+    <script src="../utils/exception/ExceptionBound.js"></script>
+    <script src="../utils/seedrandom.js"></script>
+    <script src="../model/Agent.js"></script>
+    <script src="../model/Environment.js"></script>
+    <script src="../model/SMA.js"></script>
+    <script >
+      config = {
+        grid: {
+          toric: true,
+          size: {
+            x: 200, //default 50
+            y: 200  //default 50
+          }
+        },
+        canvasDisplay: true,
+        canvasSize: {
+          x: 400,
+          y: 400,
+          unit: 'px'
+        },
+        box: {
+          size: 20,
+          unit: 'px'
+        },
+        delay: 1, //if delay null, manual refresh
+        sheduling: "fair", //value radom, sequential,fair
+        nbTicks: 1000, //infinite if 0
+        trace: false,
+        seed: 'any string you like', //radom if null
+        refresh: 1, //if(tick%refresh ==0)
+        particules: {
+          Agents: 500
+        },
+        render: "TableVue"// WebGLVue or TableVue
+      };
+
+      var start, end;
+      //create SMA to initialize prototype
+      new SMA();
+
+      var run = SMA.prototype.run;
+      SMA.prototype.run = function () {
+        start = performance.now();
+        self = this;
+        self._tick = 1;
+        self._inTurn = false;
+        if (config.delay != 0) {
+          self._intervalID = window.setInterval(function () {
+            self.launchTurn(self);
+          }, config.delay);
+        }
+      };
+
+      SMA.prototype.launchTurn = function () {
+        self = this;
+        if (!self._inTurn) {
+          self._inTurn = true;
+          self.turn();
+          if (self._tick == config.nbTicks) {
+            console.log("clear interval eR  ")
+            clearInterval(self._intervalID);
+            end = performance.now();
+            console.log("time to simu :", end - start);
+          }
+          self._tick++;
+          self._inTurn = false;
+        }
+      };
+    </script>
+    <script src="../vue/TableVue.js"></script>
+    <script src="../vue/NulVue.js"></script>
+    <script src="../vue/WebGLVue.js"></script>
+    <script src="../vue/Trace.js"></script>
+    <script src="../vue/VueFactory.js"></script>
+    <script src="../main.js"></script>
+
+    <div id="view"></div>
+    <div id="panel"></div>
+    <div><button onclick="main.nextTick()">next tick</button></div>
+  </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+  <head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../mocha.css" type="text/css" />
+  </head>
+  <body>
+    <div id="mocha"><p><a href="./">Index</a></p></div>
+    <div id="messages"></div>
+    <div id="fixtures"></div>
+    <script >var config={
+      fish:{}
+    }</script>
+    <script src="../mocha.min.js"></script>
+    <script src="../chai.js"></script>
+    <script src="../../core/model/Environment.js"></script>
+    <script src="../../core/utils/seedrandom.js"></script>
+    <script src="../../core/model/SMA.js"></script>
+    <script src="../../core/model/Agent.js"></script>
+    <script src="../../wator/Animal.js"></script>
+    <script src="../../wator/Fish.js"></script>
+    <script>mocha.setup('bdd')</script>
+    <script src="Fish.js"></script>
+    <script>mocha.run();</script>
+  </body>
+</html>
