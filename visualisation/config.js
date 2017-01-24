@@ -23,7 +23,8 @@ var config = {
   seed: 'any string', //radom if null
   refresh: 1, //if(tick%refresh == 0)
   particules: {
-    Button: 2
+    //   Button: 2
+    Input: 1
   },
   render: "TableVue" // WebGLVue or TableVue
 };
