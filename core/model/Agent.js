@@ -2,22 +2,30 @@
  */
 class Agent {
   
-  constructor(x, y, env, style, html, size) {
-    this._pos = {
+  constructor(x, y, env, style, html, opts) {
+    var self = this;
+
+    self._pos = {
       x: x,
       y: y
     };
+
+    self._opts = opts || {};
+    self._size = self._opts.size || 1;
+    self._type = "button";
+    self._html = "test";
+    self._style = style || "col-xs-1";
+    self._html = html || "Text";
+    self._listenKey = true;
     
-    this._size = size || 1;
-    this._type = "button";
-    this._html = "test";
-    this._style = style || "col-xs-1";
-    this._html = html || "Text";
-    this._listenKey = true;
-    
-    this._env = env;
-    this._changeDir = false;
-    this.offset = Agent.direction[Math.floor(Math.random() * 8)];
+    self._env = env;
+    self._changeDir = false;
+    self.offset = Agent.direction[Math.floor(Math.random() * 8)];
+
+    self._id = "x" + x + "y" + y;
+    window.onkeydown = function (e) {
+      self.onKeyDown(e);
+    };
   }
   
   x() {
@@ -40,10 +48,6 @@ class Agent {
     return this._style;
   };
   
-  decide() {
-    throw new SubClassesResponsability("decide");
-  };
-  
   setPos(pos) {
     this._env.setAgentAt(this, pos);
     this._pos = pos;
@@ -52,6 +56,42 @@ class Agent {
   changeDir() {
     return this._changeDir;
   };
+
+  onKeyDown(e) {
+      var code = e.keyCode ? e.keyCode : e.which;
+      if (this.constructor.CODE[code]) {
+        this.constructor.letterBox.lastDirection = this.constructor.letterBox.direction;
+        this.constructor.letterBox.direction = this.constructor.CODE[code];
+      }
+  }
+
+  decide() {
+    if (this._listenKey) {
+      var pos = {
+        x: this._pos.x + this.constructor.letterBox.direction.x,
+        y: this._pos.y + this.constructor.letterBox.direction.y
+      };
+      if (this._perception(pos)) {
+        this._move(pos);
+      }
+    }
+  };
+
+  _move(pos) {
+    this._env.moveAgent(this, pos);
+    this.lastPos = this._pos;
+    this._pos = pos;
+    this._id = "x" + pos.x + "y" + pos.y;
+  };
+
+  _perception(pos) {
+    try {
+      return this._env.isFree(pos);
+    }
+    catch (e) {
+      return false;
+    }
+  }
 }
 
 Agent.init = {};
@@ -90,3 +130,6 @@ Agent.direction = [
     y: -1
   }
 ];
+
+Agent.CODE = {38: {x: -1, y: 0}, 39: {x: 0, y: 1}, 40: {x: 1, y: 0}, 37: {x: 0, y: -1}, 32: {x: 0, y: 0}};
+Agent.letterBox = {lastDirection: {x: 0, y: 0}, direction: {x: 0, y: 0}};

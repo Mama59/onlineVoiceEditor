@@ -62,6 +62,12 @@ class TableVue {
           var element = document.createElement(agent._type);
           element.className = agent._style;
           element.innerHTML = agent._html;
+          if(agent._opts) {
+            for (var name in agent._opts) {
+              var opt = agent._opts[name];
+              element[name] = opt;
+            }
+          }
           td.appendChild(element);
         }
         else {
