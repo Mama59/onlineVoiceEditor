@@ -1,6 +1,6 @@
 var config = {
     grid: {
-        toric: true,
+        toric: false,
         size: {
             x: 12,
             y: 12 //default 50

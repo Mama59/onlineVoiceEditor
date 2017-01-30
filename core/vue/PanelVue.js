@@ -1,6 +1,6 @@
 class PanelVue {
     constructor(HTMLContainer, environment) {
-        
+
         this._env = environment;
         this._container = HTMLContainer;
         if (this._container) {
@@ -12,68 +12,88 @@ class PanelVue {
             this._sizeList = 0;
         }
     }
-    
+
     update(agents) {
         if (this._container) {
             this._repaint(agents);
         }
     };
-    
+
     _repaint() {
         var agents = this._env.getAgents();
         if (this._env._sma._hasChangedPanel) {
             this._elementList(agents);
         }
     };
-    
+
     _elementDetails(agent) {
         var detailsSelected = document.getElementById("detailsSelected");
         detailsSelected.innerHTML = "";
         var form = document.createElement('form');
-        
+        form.className = 'form-horizontal';
+
         for (var key in agent._opts) {
             this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
         }
-        
+
         detailsSelected.appendChild(form);
     }
-    
-    
+
+
     keyUp(e) {
         var event = e || window.event;
         var charCode = event.which || event.keyCode;
         if (charCode == '13') {
-            var agent = this.agent;
-            agent._updateOpts(this.id, this.value);
+            if (this.checkValidity()) {
+                var agent = this.agent;
+                agent._updateOpts(this.id, this.value);
+            }
         }
-        
     };
-    
+
     _addToForm(form, agent, value, key, update) {
-        var div = document.createElement('div');
-        div.className = "input-group";
+        var divForm = document.createElement('div');
+        divForm.className = "form-group";
         var label = document.createElement('label');
         label.innerHTML = key + ": ";
+        label.className = "control-label col-sm-2";
+        label.for = key;
+
         var input = document.createElement('input');
         input.type = 'text';
         input.value = value;
         input.id = key;
         input.agent = agent;
         input.onkeydown = this.keyUp;
+        input.className = 'form-control';
         var button = document.createElement('button');
         button.innerHTML = 'Change';
+        button.className = 'btn btn-success';
         button.agent = agent;
         button.key = key;
         button.input = input;
         button.onclick = update;
-        div.appendChild(label);
+
+        var div = document.createElement('div');
+        div.className = "col-sm-8";
         div.appendChild(input);
-        div.appendChild(button);
-        form.appendChild(div);
-        
+
+        if (key == 'size') {
+            input.type = 'number';
+            input.min = 1;
+            var sizeMax = agent.getWidthMax();
+            input.max = sizeMax.right + 1;
+        }
+
+        divForm.appendChild(label);
+        divForm.appendChild(div);
+        divForm.appendChild(button);
+
+        form.appendChild(divForm);
+
     }
-    
-    
+
+
     _elementList(agents) {
         var elementList = document.getElementById("elementList");
         elementList.innerHTML = "";
@@ -82,7 +102,7 @@ class PanelVue {
             if (agent._listenKey) {
                 this._elementDetails(agent);
             }
-            
+
             var li = document.createElement("li");
             var element = document.createElement('a');
             element.agent = agent;
@@ -95,7 +115,7 @@ class PanelVue {
             elementList.appendChild(li);
         }
     }
-    
+
     _addElements() {
         var elementsTypes = [
             {name: 'Button'},
@@ -108,7 +128,7 @@ class PanelVue {
                 }
             }
         ];
-        
+
         var addElement = document.getElementById("addElement");
         addElement.innerHTML = "";
         for (var index in elementsTypes) {
@@ -124,7 +144,7 @@ class PanelVue {
             li.appendChild(element);
             addElement.appendChild(li);
         }
-        
+
         var li = document.createElement("li");
         var element = document.createElement('a');
         element.innerHTML = 'Add line';
@@ -134,7 +154,7 @@ class PanelVue {
         li.appendChild(element);
         addElement.appendChild(li);
     }
-    
+
     _createElement() {
         var env = this.env;
         var type = this.elementType;
