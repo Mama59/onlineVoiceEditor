@@ -4,28 +4,36 @@ class Agent {
   
   constructor(x, y, env, style, html, opts) {
     var self = this;
-
+    
     self._pos = {
       x: x,
       y: y
     };
-
+    
     self._opts = opts || {};
     self._size = self._opts.size || 1;
     self._type = "button";
     self._html = "test";
     self._style = style || "col-xs-1";
     self._html = html || "Text";
-    self._listenKey = true;
-    
+    self.setListenKey(true);
     self._env = env;
     self._changeDir = false;
     self.offset = Agent.direction[Math.floor(Math.random() * 8)];
-
+    
     self._id = "x" + x + "y" + y;
     window.onkeydown = function (e) {
       self.onKeyDown(e);
     };
+  }
+  
+  setListenKey(boolean) {
+    this._listenKey = boolean;
+  }
+  
+  setFocus() {
+    this._env.removeAllListenKey();
+    this.setListenKey(true);
   }
   
   x() {
@@ -56,15 +64,15 @@ class Agent {
   changeDir() {
     return this._changeDir;
   };
-
+  
   onKeyDown(e) {
-      var code = e.keyCode ? e.keyCode : e.which;
-      if (this.constructor.CODE[code]) {
-        this.constructor.letterBox.lastDirection = this.constructor.letterBox.direction;
-        this.constructor.letterBox.direction = this.constructor.CODE[code];
-      }
+    var code = e.keyCode ? e.keyCode : e.which;
+    if (this.constructor.CODE[code]) {
+      this.constructor.letterBox.lastDirection = this.constructor.letterBox.direction;
+      this.constructor.letterBox.direction = this.constructor.CODE[code];
+    }
   }
-
+  
   decide() {
     if (this._listenKey) {
       var pos = {
@@ -76,14 +84,14 @@ class Agent {
       }
     }
   };
-
+  
   _move(pos) {
     this._env.moveAgent(this, pos);
     this.lastPos = this._pos;
     this._pos = pos;
     this._id = "x" + pos.x + "y" + pos.y;
   };
-
+  
   _perception(pos) {
     try {
       return this._env.isFree(pos);
