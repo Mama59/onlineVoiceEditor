@@ -2,32 +2,29 @@
  */
 
 class Button extends Agent {
-  
-  constructor(x, y, env, style, html, opts) {
-    if (!style) {
-      style = "btn btn-danger btn-xs";
-    }
-    
-    if (!opts) {
-      opts = {
-        name: 'test',
-        value: 'test',
-      };
-    }
-    
-    super(x, y, env, style, html, opts);
-    this._type = 'button';
-    this._html = opts.value;
-  };
-  
-  updateOpts() {
-    super.updateOpts();
-    var self = this.agent;
-    var key = this.key;
-    var value = this.input.value;
-    if (key == 'value') {
-      self._html = value;
-    }
-  }
+
+    constructor(x, y, env, html, opts) {
+        if (!opts) {
+            opts = {
+                name: 'test',
+                value: 'test'
+            };
+        }
+
+        if (!opts.style) {
+            opts.style = "btn btn-danger btn-xs col-xs-12";
+        }
+
+        super(x, y, env, html, opts);
+        this._type = 'button';
+        this._html = opts.value;
+    };
+
+    _updateOpts(key, value) {
+        super._updateOpts(key, value);
+        if (key == 'value') {
+            this._html = value;
+        }
+    };
 }
 
