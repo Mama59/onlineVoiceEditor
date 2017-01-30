@@ -3,6 +3,7 @@ class SMA {
     this._agents = agents;
     this._observers = [];
     this._hasChanged = false;
+    this._hasChangedPanel = true;
     this._tick = 0;
     this._counter = {};
     var keys = Object.keys(counter);
@@ -81,6 +82,8 @@ class SMA {
     if (this.hasChanged()) {
       this.notifyObserver(killed);
     }
+    
+    this._hasChangedPanel = false;
   };
   
   hasChanged() {
@@ -99,6 +102,7 @@ class SMA {
     for (var i = 0; i < this._observers.length; i++) {
       this._observers[i].update(this._agents, killed);
     }
+    
     this._hasChanged = false;
   };
   

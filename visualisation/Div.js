@@ -7,6 +7,13 @@ class Div extends Agent {
     if (!style) {
       style = "col-xs-1";
     }
+  
+    if (!opts) {
+      opts = {
+        name: 'test',
+        value : 'test'
+      };
+    }
     super(x, y, env, style, html, opts);
     this._type = 'div';
     this._html = 'div';

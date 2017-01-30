@@ -10,6 +10,7 @@ class Environment {
     this.end = false;
     this.win = false;
     this._plan = [];
+    
     this._sma = {
       setChanged: function () {
       }
@@ -74,6 +75,7 @@ class Environment {
     this._sma.addAgent(agent);
     this.removeAllListenKey();
     agent.setListenKey(true);
+    this._sma._hasChangedPanel = true;
   };
   
   removeAllListenKey() {
@@ -90,6 +92,7 @@ class Environment {
       this._sma.killAgent(agent);
       agent.die();
     }
+    this._sma._hasChangedPanel = true;
   };
   
   getRandomPos() {
@@ -100,7 +103,9 @@ class Environment {
   };
   
   addX() {
+    var self = this.env;
     config.grid.size.x++;
+    self._sma._hasChangedPanel = true;
   }
   
   getFreeRandomPos() {

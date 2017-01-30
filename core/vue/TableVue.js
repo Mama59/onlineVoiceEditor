@@ -28,11 +28,9 @@ class TableVue {
       this.end();
     }
     else {
-      if (this._tick == this._refresh) {
+      if (this._env._sma._hasChangedPanel) {
         this._repaint(agents);
-        this._tick = 0;
       }
-      this._tick++;
     }
   };
   
@@ -65,7 +63,7 @@ class TableVue {
           element.onclick = agent.onclick;
           element.agent = agent;
           
-          if(agent._opts) {
+          if (agent._opts) {
             for (var name in agent._opts) {
               var opt = agent._opts[name];
               element[name] = opt;

@@ -7,10 +7,15 @@ class Label extends Agent {
     if (!style) {
       style = "col-xs-1";
     }
+  
+    if (!opts) {
+      opts = {
+        name: 'test',
+        value : 'test'
+      };
+    }
 
     super(x, y, env, style, html, opts);
-    var self = this;
     this._type = 'label';
-    this._html = 'label';
   };
 }

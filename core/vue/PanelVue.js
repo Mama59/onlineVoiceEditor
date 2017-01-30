@@ -21,18 +21,52 @@ class PanelVue {
   
   _repaint() {
     var agents = this._env.getAgents();
-    
-    if (this._sizeList != agents.length) {
-      this._sizeList = agents.length;
+    if (this._env._sma._hasChangedPanel) {
       this._elementList(agents);
     }
   };
+  
+  _elementDetails(agent) {
+    var detailsSelected = document.getElementById("detailsSelected");
+    detailsSelected.innerHTML = "";
+    var form = document.createElement('form');
+    
+    for (var key in agent._opts) {
+      this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
+    }
+    
+    detailsSelected.appendChild(form);
+  }
+  
+  _addToForm(form, agent, value, key, update) {
+    var div = document.createElement('div');
+    div.className = "input-group";
+    var label = document.createElement('label');
+    label.innerHTML = key + ": ";
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.value = value;
+    var button = document.createElement('button');
+    button.innerHTML = 'Change';
+    button.agent = agent;
+    button.key = key;
+    button.input = input;
+    button.onclick = update;
+    div.appendChild(label);
+    div.appendChild(input);
+    div.appendChild(button);
+    form.appendChild(div);
+  }
   
   _elementList(agents) {
     var elementList = document.getElementById("elementList");
     elementList.innerHTML = "";
     for (var index = 0; index < agents.length; index++) {
       var agent = agents[index];
+      if (agent._listenKey) {
+        this._elementDetails(agent);
+      }
+      
       var li = document.createElement("li");
       var element = document.createElement('a');
       element.agent = agent;

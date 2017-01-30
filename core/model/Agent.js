@@ -12,10 +12,8 @@ class Agent {
     
     self._opts = opts || {};
     self._size = self._opts.size || 1;
-    self._type = "button";
-    self._html = "test";
+    
     self._style = style || "col-xs-1";
-    self._html = html || "Text";
     self.setListenKey(true);
     self._env = env;
     self._changeDir = false;
@@ -27,22 +25,28 @@ class Agent {
     };
   }
   
+  updateOpts() {
+    var self = this.agent;
+    var key = this.key;
+    var value = this.input.value;
+    if (self._opts) {
+      self._opts[key] = value;
+    }
+    self._env._sma._hasChangedPanel = true;
+  }
+  
   onclick() {
     var self = this.agent;
     self._env.removeAllListenKey();
     self.setListenKey(true);
+    self._env._sma._hasChangedPanel = true;
   }
   
   setListenKey(boolean) {
     this._listenKey = boolean;
     this.constructor.letterBox.direction = {x: 0, y: 0};
   };
-  
-  setFocus() {
-    this._env.removeAllListenKey();
-    this.setListenKey(true);
-  }
-  
+    
   x() {
     return this._pos.x;
   };
@@ -97,6 +101,9 @@ class Agent {
     this.lastPos = this._pos;
     this._pos = pos;
     this._id = "x" + pos.x + "y" + pos.y;
+    if (this._env) {
+      this._env._sma._hasChangedPanel = true;
+    }
   };
   
   _perception(pos) {
