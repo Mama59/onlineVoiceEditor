@@ -8,6 +8,7 @@ class Input extends Agent {
     if (!style) {
       style = "form-control";
     }
+    
     if (!opts) {
       opts = {type: 'number'};
     }

@@ -10,6 +10,5 @@ class Div extends Agent {
     super(x, y, env, style, html, opts);
     this._type = 'div';
     this._html = 'div';
-
   };
 }

@@ -15,7 +15,7 @@ class Environment {
       }
     }; //mock before set sma
     
-    for (var i = 0; i < this._x; i++) {
+    for (var i = 0; i < this.xSize(); i++) {
       this._plan[i] = [];
       for (var j = 0; j < this._y; j++) {
         this._plan[i][j] = {agent: null};
@@ -24,8 +24,22 @@ class Environment {
     this.smaSet = false;
   };
   
+  resetPlan() {
+    for (var i = 0; i < this.xSize(); i++) {
+      if (!this._plan[i]) {
+        this._plan[i] = [];
+      }
+      for (var j = 0; j < this._y; j++) {
+        if (!this._plan[i][j]) {
+          this._plan[i][j] = {agent: null};
+        }
+      }
+    }
+  }
+  
+  
   _resetAllDistance() {
-    for (var i = 0; i < this._x; i++) {
+    for (var i = 0; i < this.xSize(); i++) {
       for (var j = 0; j < this._y; j++) {
         this._plan[i][j].distance = -1;
       }
@@ -37,6 +51,11 @@ class Environment {
   };
   
   xSize() {
+    if (this._x != config.grid.size.x) {
+      this._x = config.grid.size.x;
+      this.resetPlan();
+    }
+    
     return this._x;
   };
   
@@ -80,6 +99,10 @@ class Environment {
     };
   };
   
+  addX() {
+    config.grid.size.x++;
+  }
+  
   getFreeRandomPos() {
     var pos = this.getRandomPos();
     while (!this.isFree(pos)) {
@@ -111,14 +134,14 @@ class Environment {
   
   _handleBound(newPos) {
     if (this._toric) {
-      if (newPos.x >= this._x || newPos.x < 0) {
-        newPos.x = ( newPos.x + this._x ) % this._x;
+      if (newPos.x >= this.xSize() || newPos.x < 0) {
+        newPos.x = ( newPos.x + this.xSize() ) % this.xSize();
       }
       if (newPos.y >= this._y || newPos.y < 0) {
         newPos.y = ( newPos.y + this._y ) % this._y;
       }
     } else {
-      if (newPos.x >= this._x || newPos.x < 0) {
+      if (newPos.x >= this.xSize() || newPos.x < 0) {
         throw new ExceptionBound(newPos.x, "x");
       }
       if (newPos.y >= this._y || newPos.y < 0) {

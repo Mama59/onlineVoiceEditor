@@ -16,10 +16,11 @@ var config = {
     size: 20,
     unit: 'px'
   },
-  delay: 500, //if delay null, manual refresh
+  delay: 100, //if delay null, manual refresh
   sheduling: "fair", //value radom, sequential,fair
   nbTicks: 0, //infinite if 0
   panel: true,
+  core: true,
   seed: 'any string', //radom if null
   refresh: 1, //if(tick%refresh == 0)
   particules: {

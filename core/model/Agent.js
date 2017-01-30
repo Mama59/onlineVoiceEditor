@@ -27,9 +27,16 @@ class Agent {
     };
   }
   
+  onclick() {
+    var self = this.agent;
+    self._env.removeAllListenKey();
+    self.setListenKey(true);
+  }
+  
   setListenKey(boolean) {
     this._listenKey = boolean;
-  }
+    this.constructor.letterBox.direction = {x: 0, y: 0};
+  };
   
   setFocus() {
     this._env.removeAllListenKey();

@@ -48,5 +48,6 @@ Game.play = function () {
   Game.sma = Game.createAgents(config.particules, agents);
   Game.createTrace();
   Game.createPanel();
+//  Game.createCore();
   Game.sma.run();
 };
