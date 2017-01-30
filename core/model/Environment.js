@@ -254,6 +254,36 @@ class Environment {
         return this._plan[pos.x][pos.y].agent == null;
     };
 
+    getAgentsOnLine(x, posAgent) {
+        var agents = [];
+        for (var y = 0; y < this.ySize(); y++) {
+            if (this._plan[x][y].agent && y < posAgent.y) {
+                agents.push(this._plan[x][y].agent);
+            }
+        }
+        return agents;
+    }
+
+    isFreePos(pos, posAgent) {
+        if (!posAgent) {
+            return this.isFree(pos);
+        }
+
+        if (this._plan[pos.x][pos.y].agent == null) {
+            var agents = this.getAgentsOnLine(pos.x, posAgent);
+            for (var index in agents) {
+                var agent = agents[index];
+                if (agent._opts.size + agent._pos.y - 1 == pos.y) {
+                    return false;
+                }
+            }
+        }
+        else {
+            return false;
+        }
+        return true;
+    }
+
     getNumberOfAgents() {
         if (this.smaSet) {
             return this._sma.getNumberOfAgents();
