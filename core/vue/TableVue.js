@@ -58,9 +58,9 @@ class TableVue {
                 td.id = id;
                 if (agent) {
                     var element = document.createElement(agent._type);
-                    if (agent._opts && agent._opts.class) {
+                    if (agent._opts && agent._opts.size) {
                         element.className = agent._style;
-                        td.className = agent._opts.class;
+                        td.className = "col-xs-" + agent._opts.size;
                     }
                     element.innerHTML = agent._html;
                     element.onclick = agent.onclick;

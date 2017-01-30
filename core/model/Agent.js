@@ -12,7 +12,7 @@ class Agent {
         
         self._opts = opts || {};
         
-        self._size = self._opts.size || 1;
+        self._opts.size = self._opts.size > 0 && self._opts.size < 13 ? self._opts.size : 1;
         
         self._style = style || "col-xs-1";
         self.setListenKey(true);
@@ -36,6 +36,9 @@ class Agent {
     _updateOpts(key, value) {
         if (this._opts) {
             this._opts[key] = value;
+        }
+        else {
+            this._opts = {key: value};
         }
         this._env._sma._hasChangedPanel = true;
     };

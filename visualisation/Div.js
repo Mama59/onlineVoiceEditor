@@ -15,10 +15,6 @@ class Div extends Agent {
             };
         }
         
-        if (!opts.class) {
-            opts.class = "col-xs-2";
-        }
-        
         super(x, y, env, style, html, opts);
         this._type = 'div';
         this._html = 'div';

@@ -16,10 +16,6 @@ class Label extends Agent {
             };
         }
         
-        if (!opts.class) {
-            opts.class = "col-xs-2";
-        }
-        
         if (!opts.value) {
             opts.value = 'test';
         }
