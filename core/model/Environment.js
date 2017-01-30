@@ -61,6 +61,11 @@ class Environment {
     };
 
     ySize() {
+        if (this._y != config.grid.size.y) {
+            this._y = config.grid.size.y;
+            this.resetPlan();
+        }
+
         return this._y;
     };
 
@@ -273,7 +278,7 @@ class Environment {
             var agents = this.getAgentsOnLine(pos.x, posAgent);
             for (var index in agents) {
                 var agent = agents[index];
-                if (agent._opts.size + agent._pos.y - 1 == pos.y) {
+                if (parseInt(agent._opts.size) + parseInt(agent._pos.y) - 1 == pos.y) {
                     return false;
                 }
             }
