@@ -1,37 +1,37 @@
 /* This agent exchange position if position is already occuped
  */
 class Agent {
-
+    
     constructor(x, y, env, html, opts) {
         var self = this;
-
+        
         self._pos = {
             x: x,
             y: y
         };
-
+        
         self._opts = opts || {};
         self._opts.name = 'test' + this.constructor.name;
         self._opts.size = self._opts.size > 0 && self._opts.size < 13 ? self._opts.size : 1;
-
+        
         self.setListenKey(true);
         self._env = env;
         self._changeDir = false;
         self.offset = Agent.direction[Math.floor(Math.random() * 8)];
-
+        
         self._id = "x" + x + "y" + y;
         window.onkeydown = function (e) {
             self.onKeyDown(e);
         };
     }
-
+    
     updateOpts() {
         var self = this.agent;
         var key = this.key;
         var value = this.input.value;
         self._updateOpts(key, value);
     }
-
+    
     _updateOpts(key, value) {
         if (this._opts) {
             this._opts[key] = value;
@@ -39,46 +39,51 @@ class Agent {
         else {
             this._opts = {key: value};
         }
+        
+        if (key == 'size') {
+            this._opts.size = parseInt(this._opts.size);
+        }
+        
         this._env._sma._hasChangedPanel = true;
     };
-
+    
     onclick() {
         var self = this.agent;
         self._env.removeAllListenKey();
         self.setListenKey(true);
         self._env._sma._hasChangedPanel = true;
     }
-
+    
     setListenKey(boolean) {
         this._listenKey = boolean;
         this.constructor.letterBox.direction = {x: 0, y: 0};
     };
-
+    
     x() {
         return this._pos.x;
     };
-
+    
     y() {
         return this._pos.y;
     };
-
+    
     getWidthMax() {
         return this._env.getWidthMax(this);
     }
-
+    
     pos() {
         return this._pos;
     };
-
+    
     setPos(pos) {
         this._env.setAgentAt(this, pos);
         this._pos = pos;
     };
-
+    
     changeDir() {
         return this._changeDir;
     };
-
+    
     onKeyDown(e) {
         var code = e.keyCode ? e.keyCode : e.which;
         if (this.constructor.CODE[code]) {
@@ -86,7 +91,7 @@ class Agent {
             this.constructor.letterBox.direction = this.constructor.CODE[code];
         }
     }
-
+    
     decide() {
         if (this._listenKey) {
             var pos = {
@@ -98,7 +103,7 @@ class Agent {
             }
         }
     };
-
+    
     _move(pos) {
         try {
             this._env.moveAgent(this, pos);
@@ -112,7 +117,7 @@ class Agent {
             //do nothing in this case
         }
     };
-
+    
     _perception(pos) {
         try {
             return this._env.isFreePos(pos, this._pos, this._opts.size);

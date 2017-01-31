@@ -2,12 +2,12 @@ Div.js
 /* This agent exchange position if position is already occuped
  */
 
-class Input extends Agent {
+class TextArea extends Agent {
     
     constructor(x, y, env, html, opts) {
         
         if (!opts) {
-            opts = {type: 'number', placeholder: ''};
+            opts = {placeholder: ''};
         }
         
         if (!opts.style) {
@@ -18,11 +18,9 @@ class Input extends Agent {
             opts.size = 2;
         }
         
-        html = 'input';
-        
         opts.value = 123;
         
         super(x, y, env, html, opts);
-        this._type = 'input';
+        this._type = 'textarea';
     };
 }

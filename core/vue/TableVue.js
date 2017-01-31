@@ -7,21 +7,21 @@ class TableVue {
         this._tick = this._refresh; // for drawing at the first tick
         this.removeAllChilds();
         this._container.appendChild(this._style);
-
+        
         this._repaint();
     }
-
+    
     setGame(game) {
         this._game = game;
     }
-
+    
     removeAllChilds() {
         var childNodes = this._container.childNodes;
         for (var index = childNodes.length - 1; index >= 0; index--) {
             this._container.removeChild(childNodes[index]);
         }
     }
-
+    
     update(agents) {
         //control refresh ofdrawing
         if (this._env.end) {
@@ -33,22 +33,22 @@ class TableVue {
             }
         }
     };
-
+    
     _repaint() {
         //drawing
         var style = "";
-
-
+        
+        
         var oldTable = this._canvas;
-
+        
         this._canvas = document.createElement('div');
-
+        
         for (var x = 0; x < this._env.xSize(); x++) {
             var tr = document.createElement('div');
             tr.className = "col-xs-12";
-
+            
             this._canvas.appendChild(tr);
-
+            
             for (var y = 0; y < this._env.ySize(); y++) {
                 var agent = this._env.getCase({x: x, y: y}).agent;
                 var id = "x" + x + "y" + y;
@@ -66,7 +66,7 @@ class TableVue {
                     element.innerHTML = agent._html;
                     element.onclick = agent.onclick;
                     element.agent = agent;
-
+                    
                     if (agent._opts) {
                         for (var name in agent._opts) {
                             var opt = agent._opts[name];
@@ -76,12 +76,12 @@ class TableVue {
                     td.appendChild(element);
                 }
                 else {
-                    td.innerHTML = '__&nbsp;';
+                    td.innerHTML = '&nbsp;';
                 }
                 tr.appendChild(td);
             }
         }
-
+        
         if (config.canvasDisplay) {
             if (oldTable == null) {
                 this._container.appendChild(this._canvas);
@@ -89,8 +89,8 @@ class TableVue {
                 this._container.replaceChild(this._canvas, oldTable);
             }
         }
-
+        
         this._style.innerHTML = style;
-
+        
     };
 }
