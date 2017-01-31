@@ -278,7 +278,7 @@ class Environment {
             var agents = this.getAgentsOnLine(pos.x, posAgent);
             for (var index in agents) {
                 var agent = agents[index];
-                if (parseInt(agent._opts.size) + parseInt(agent._pos.y) - 1 == pos.y) {
+                if (parseInt(agent._opts.size) + parseInt(agent._pos.y) - 1 >= pos.y) {
                     return false;
                 }
             }
