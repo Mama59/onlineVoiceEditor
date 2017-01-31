@@ -115,7 +115,7 @@ class Agent {
 
     _perception(pos) {
         try {
-            return this._env.isFreePos(pos, this._pos);
+            return this._env.isFreePos(pos, this._pos, this._opts.size);
         }
         catch (e) {
             return false;

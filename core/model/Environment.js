@@ -259,7 +259,7 @@ class Environment {
         return this._plan[pos.x][pos.y].agent == null;
     };
 
-    getAgentsOnLine(x, posAgent) {
+    getAgentsOnLine(x, posAgent, size) {
         var agents = [];
         for (var y = 0; y < this.ySize(); y++) {
             if (this._plan[x][y].agent && y < posAgent.y) {
@@ -269,13 +269,13 @@ class Environment {
         return agents;
     }
 
-    isFreePos(pos, posAgent) {
+    isFreePos(pos, posAgent, size) {
         if (!posAgent) {
             return this.isFree(pos);
         }
 
         if (this._plan[pos.x][pos.y].agent == null) {
-            var agents = this.getAgentsOnLine(pos.x, posAgent);
+            var agents = this.getAgentsOnLine(pos.x, posAgent, size);
             for (var index in agents) {
                 var agent = agents[index];
                 if (parseInt(agent._opts.size) + parseInt(agent._pos.y) - 1 >= pos.y) {
