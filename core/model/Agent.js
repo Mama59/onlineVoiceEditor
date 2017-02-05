@@ -58,6 +58,8 @@ class Agent {
     setListenKey(boolean) {
         this._listenKey = boolean;
         this.constructor.letterBox.direction = {x: 0, y: 0};
+        if(boolean)
+            Agent.selected = this;
     };
     
     x() {
@@ -94,7 +96,6 @@ class Agent {
     }
     
     decide() {
-
         if(this.constructor.letterBox.direction.x == 0 && this.constructor.letterBox.direction.y == 0)
         {
             this._countMove = 0;
@@ -181,3 +182,6 @@ Agent.direction = [
 Agent.CODE = {38: {x: -1, y: 0}, 39: {x: 0, y: 1}, 40: {x: 1, y: 0}, 37: {x: 0, y: -1}, 32: {x: 0, y: 0}};
 Agent.letterBox = {lastDirection: {x: 0, y: 0}, direction: {x: 0, y: 0}};
 Agent.letterBox.nbMove = 0;
+
+// Ne peut être utilisé que en lecture sinon on s'ouvre à la possibilité de bug !
+Agent.selected = null;

@@ -3,6 +3,8 @@ var allPossibleName = [];
 
 function speechToAction(phrase) {
 
+    phrase = phrase.toLowerCase();
+
     var possiblePhraseMaxLenght = 0;
     if(allPossiblePhrase.length < 1)
     {
@@ -10,7 +12,7 @@ function speechToAction(phrase) {
         {
             for(var j = 0; j < dict[i].phrases.length; j++)
             {
-                allPossiblePhrase.push(dict[i].phrases[j]);
+                allPossiblePhrase.push(dict[i].phrases[j].toLowerCase());
                 if(dict[i].phrases[j].length > possiblePhraseMaxLenght)
                     possiblePhraseMaxLenght = dict[i].phrases[j].length;
             }
@@ -35,15 +37,14 @@ function speechToAction(phrase) {
     for(var i = 0; i < agents.length; i++)
         allPossibleName.push(agents[i]._opts.name);
         
-    match = findBestMatch(phrase, allPossiblePhrase);
-    //console.log(match);
+    match = findBestMatch(phrase, allPossiblePhrase);   
     bestMatch = match.bestMatch;
     bestMatch.target = bestMatch.target.replace(/[_]+/g, '');
     console.log("Phrase recognized : " + phrase + "       Best match : " + bestMatch.target);
 
-    if(bestMatch.rating < 0.1)
+    if(bestMatch.rating < 0.05)
     {
-        notifyError("No matching", "Phrase understood : " + phrase);
+        notifyError("No matching", "Phrase understood : " + phrase + "(Rating : " + bestMatch.rating + " )");
         return;
     }
 
@@ -51,7 +52,7 @@ function speechToAction(phrase) {
     {
         for(var j = 0; j < dict[i].phrases.length; j++)
         {
-            if(dict[i].phrases[j] == bestMatch.target)
+            if(dict[i].phrases[j].toLowerCase() == bestMatch.target)
             {
                 dict[i].action(phrase);
             }
@@ -63,7 +64,8 @@ var dict = [
     {
         phrases: [
             "Créer un bouton",
-            "Ajouter un bouton"
+            "Ajouter un bouton",
+            "Mettre un bouton"
         ],
         action: function (phrase) {
             var myRegexp = /outon (.*)/i;
@@ -80,7 +82,8 @@ var dict = [
     {
         phrases: [
             "Créer un label",
-            "Ajouter un label"
+            "Ajouter un label",
+            "Mettre un label"
         ],
                 action: function (phrase) {
             var myRegexp = /abel (.*)/i;
@@ -97,7 +100,8 @@ var dict = [
     {
         phrases: [
             "Créer une image",
-            "Ajouter une image"
+            "Ajouter une image",
+            "Mettre une image"
         ],
         action: function (phrase) {
             var myRegexp = /mage (.*)/i;
@@ -113,7 +117,8 @@ var dict = [
     {
         phrases: [
             "Créer une Textarea",
-            "Ajouter une Textarea"
+            "Ajouter une Textarea",
+            "Mettre une Textarea"
         ],
         action: function (phrase) {
             var myRegexp = /area (.*)/i;
@@ -129,7 +134,9 @@ var dict = [
     {
         phrases: [
             "Créer un input",
-            "Ajouter un input"
+            "Ajouter un input",
+            "Mettre un input"
+            
         ],
         action: function (phrase) {
             var myRegexp = /input (.*)/i;
@@ -145,98 +152,20 @@ var dict = [
     {
         phrases: [
             "Ajouter xx ligne",
-            "Créer xx ligne"
+            "Créer xx ligne",
+            "Mettre xx ligne"
         ],
         action: function (phrase) {
             var myRegexp = /(\d+)/i;
             var match = myRegexp.exec(phrase);
             if(match != null)
             {
-                for(var i = 0; i < match[1]; i++)
+                var nbLine = convertLetterNumbersFromGoogleSpeechToInt(match[1])
+                for(var i = 0; i < nbLine; i++)
                     document.getElementById('idAddLine').click();
             }
             else
                 document.getElementById('idAddLine').click();
-        }
-    },
-    {
-        phrases: [
-            "Déplacer xx vers xx de xx",
-            "Bouger xx vers xx de xx",
-            "Déplacer xx de xx vers xx",
-            "Bouger xx de xx vers xx"
-        ],
-        action: function (phrase) {
-            /*
-
-            Pour test la regex dans tout les cas possible ( le - x y z, sont les numéros de groupe qui doivent match ):
-            déplacer toto de 3 vers la droite - 2 3 5
-            bouger toto de 3 vers la droite - 2 3 5
-            déplacer de 3 vers la droite  - 2 3 5
-            bouger de 3 vers la droite  - 2 3 5
-
-            déplacer toto vers la droite de 3 - 7 8 9
-            bouger toto vers la droite de 3  - 7 8 9
-            déplacer vers la droite de 3 - 7 8 9
-            bouger vers la droite de 3 - 7 8 9
-
-            déplacer toto vers la droite - 11 12
-            bouger toto vers la droite - 11 12
-            déplacer vers la droite - 11 12 
-            bouger vers la droite - 11 12
-
-            */
-            var myRegexp = /(bouger|déplacer) (.*)de (\d+) vers (le|la) (droite|gauche|bas|haut)|(bouger|déplacer) (.*)vers .* (droite|gauche|bas|haut) de (\d+)|(bouger|déplacer) (.*)vers .* (droite|gauche|bas|haut)/i;
-            var match = myRegexp.exec(phrase);
-            
-            if(match != null)
-            {
-                var posAgentName = 0;
-                var posAgentDirection = 0;
-                var posNbMove = 0;
-                if(match[2] != null)
-                {
-                    posAgentName = 2;
-                    posAgentDirection = 5;
-                    posNbMove = 3;
-                }
-                else if(match[7] != null)
-                {
-                    posAgentName = 7;
-                    posAgentDirection = 8;
-                    posNbMove = 9;
-                }
-                
-                if(match[11] != null)
-                {
-                    posAgentName = 11;
-                    posAgentDirection = 12;
-                    posNbMove = 1;
-                }
-
-                if(match[posAgentName] != "")
-                {
-                    bestMatch = findBestMatch(match[posAgentName], allPossibleName).bestMatch;
-                    var agent = document.getElementById(bestMatch.target);
-                    agent.click();
-                }
-                
-                if(match[posNbMove] != null && parseInt(match[posNbMove]) != NaN)
-                    Agent.letterBox.nbMove = parseInt(match[posNbMove]);
-                else
-                    Agent.letterBox.nbMove  = 0;
-
-                if(match[posAgentDirection] == "gauche")
-                    Agent.letterBox.direction = Agent.CODE[37];
-                else if(match[posAgentDirection] == "haut")
-                    Agent.letterBox.direction = Agent.CODE[38];
-                else if(match[posAgentDirection] == "droite")
-                    Agent.letterBox.direction = Agent.CODE[39];
-                else if(match[posAgentDirection] == "bas")
-                    Agent.letterBox.direction = Agent.CODE[40];
-            }
-            else
-                notifyError("No matching", "Phrase understood : " + phrase);
         }
     },
     {
@@ -249,13 +178,290 @@ var dict = [
             
             if(match != null)
             {
-                if(match[1])
+                if(match[1] != "")
                 {
                     bestMatch = findBestMatch(match[1], allPossibleName).bestMatch;
-                    var agent = document.getElementById(bestMatch.target);
-                    agent.click();
+                    var element = document.getElementById(bestMatch.target);
+                    element.click();
                 }
             }
         }
+    },
+    {
+        phrases: [
+            "Modifier la propriété xx de xx avec xx",
+            "Changer la propriété xx de xx avec xx",
+            "Modifier la propriété xx de xx en xx",
+            "Changer la propriété xx de xx en xx",
+            "Modifier la propriété xx de xx par xx",
+            "Changer la propriété xx de xx par xx",
+            "Modifier xx de xx avec xx",
+            "Changer xx de xx avec xx",
+            "Modifier xx de xx en xx",
+            "Changer xx de xx en xx",
+            "Modifier xx de xx par xx",
+            "Changer xx de xx par xx"
+        ],
+        action: function (phrase) {
+            /*
+            Modifier la propriété name de toto avec azerty - 5 7 9
+            Changer la propriété name de toto avec azerty - 5 7 9
+            Modifier name de toto avec azerty - 5 7 9
+            Changer name de toto avec azerty - 5 7 9
+            Modifier name avec azerty - 14 16
+            Changer name avec azerty - 14 16
+            */
+
+            var myRegexp = /(modi[^\s]+|chang[^\s]+) (la propriété |)((le|la) |)(.*)( de )(.*)( avec | par | en | à )(.*)|(modi[^\s]+|chang[^\s]+) (la propriété |)((le|la) |)(.*)( avec | par | en | à )(.*)/i;
+            var match = myRegexp.exec(phrase);
+            
+            var property = "";
+            var elementName = "";
+            var newValue = "";
+
+            if(match[5] != null)
+            {
+                property = match[5];
+                elementName = match[7];
+                newValue = match[9];
+            }
+            else if(match[14] != null)
+            {
+                property = match[14];
+                newValue = match[16];
+            }
+
+            if(elementName != "")
+            {
+                bestMatch = findBestMatch(elementName, allPossibleName).bestMatch;
+                var element = document.getElementById(bestMatch.target);
+                element.click();
+            }
+
+            if(property != "")
+            {
+                if(newValue == "rien")
+                    Agent.selected._opts[property] = "";
+                else
+                    Agent.selected._opts[property] = newValue;
+            }
+                
+
+        }
+    },
+    {
+        phrases: [
+            "Déplacer xx vers xx de xx",
+            "Bouger xx vers xx de xx",
+            "Déplacer xx de xx vers xx",
+            "Bouger xx de xx vers xx",
+            "Déplacer xx à xx de xx",
+            "Bouger xx à xx de xx",
+            "Déplacer xx de xx à xx",
+            "Bouger xx de xx à xx",
+            "Déplacer xx de xx sur xx",
+            "Bouger xx de xx sur xx"
+        ],
+        action: function (phrase) {
+            /*
+                Pour test la regex dans tout les cas possible ( le - x y z, sont les numéros de groupe qui doivent match ):
+
+                déplacer toto de 3 à droite - 2 3 7
+                bouger toto de 3 à droite - 2 3 7
+                déplacer de 3 à droite  - 2 3 7
+                bouger de 3 à droite  - 2 3 7
+                ---
+                déplacer toto de 3 vers la droite - 2 3 7
+                bouger toto de 3 vers la droite - 2 3 7
+                déplacer de 3 vers la droite  - 2 3 7
+                bouger de 3 vers la droite  - 2 3 7
+                ------------------------------------
+                déplacer toto à droite de 3 - 9 11 12
+                bouger toto à droite de 3  - 9 11 12
+                déplacer à droite de 3 - 9 11 12
+                bouger à droite de 3 - 9 11 12
+                ---
+                déplacer toto vers la droite de 3 - 9 11 12
+                bouger toto vers la droite de 3  - 9 11 12
+                déplacer vers la droite de 3 - 9 11 12
+                bouger vers la droite de 3 - 9 11 12
+                ------------------------------------
+                déplacer toto à droite - 14 16
+                bouger toto à droite - 14 16
+                déplacer à droite - 14 16
+                bouger à droite - 14 16
+                ---
+                déplacer toto vers la droite - 14 16
+                bouger toto vers la droite - 14 16
+                déplacer vers la droite - 14 16
+                bouger vers la droite - 14 16
+            */
+
+            // Dans cette regex chaque fois que l'on trouve [^\s] c'est parce que ainsi on est moins senseible a une mauvaise compréhenssion de google speech
+            var myRegexp = /(bou[^\s]+|dépla[^\s]+) (.*)de (.*) (à|vers (le|la)|sur (le|la)) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+)|(bou[^\s]+|dépla[^\s]+) (.*)(à|vers .*|sur .*) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+) de (.*)|(bou[^\s]+|dépla[^\s]+) (.*)(à|vers .*|sur .*) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+)/i;
+            // regex qui pourrait améliorer la précédente en partie mais pas du tout finie, donc juste une base si on veut évoluer dessus : (bou[^\s]+|dépla[^\s]+) ([^\s]+) (à |(vers .* |vers |.* )|)(droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+) (de |)(\d+|)
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                var posAgentName = 0;
+                var posAgentDirection = 0;
+                var posNbMove = 0;
+                /*
+                déplacer toto de 3 à droite - 2 3 7
+                bouger toto de 3 à droite - 2 3 7
+                déplacer de 3 à droite  - 2 3 7
+                bouger de 3 à droite  - 2 3 7
+                ---
+                déplacer toto de 3 vers la droite - 2 3 7
+                bouger toto de 3 vers la droite - 2 3 7
+                déplacer de 3 vers la droite  - 2 3 7
+                bouger de 3 vers la droite  - 2 3 7
+                */
+                if(match[2] != null)
+                {
+                    posAgentName = 2;
+                    posAgentDirection = 7;
+                    posNbMove = 3;
+                }
+                /*
+                déplacer toto à droite de 3 - 9 11 12
+                bouger toto à droite de 3  - 9 11 12
+                déplacer à droite de 3 - 9 11 12
+                bouger à droite de 3 - 9 11 12
+                ---
+                déplacer toto vers la droite de 3 - 9 11 12
+                bouger toto vers la droite de 3  - 9 11 12
+                déplacer vers la droite de 3 - 9 11 12
+                bouger vers la droite de 3 - 9 11 12
+                */
+                else if(match[9] != null)
+                {
+                    posAgentName = 9;
+                    posAgentDirection = 11;
+                    posNbMove = 12;
+                }
+                /*
+                déplacer toto à droite - 14 16
+                bouger toto à droite - 14 16
+                déplacer à droite - 14 16
+                bouger à droite - 14 16
+                ---
+                déplacer toto vers la droite - 14 16
+                bouger toto vers la droite - 14 16
+                déplacer vers la droite - 14 16
+                bouger vers la droite - 14 16
+                */
+                if(match[14] != null)
+                {
+                    posAgentName = 14;
+                    posAgentDirection = 16;
+                    posNbMove = 1;
+                }
+
+                if(match[posAgentName] != "")
+                {
+                    bestMatch = findBestMatch(match[posAgentName], allPossibleName).bestMatch;
+                    var element = document.getElementById(bestMatch.target);
+                    element.click();
+                }
+                
+                if(match[posNbMove] != null)
+                {
+                    var nbMove = convertLetterNumbersFromGoogleSpeechToInt(match[posNbMove]);
+                    Agent.letterBox.nbMove = nbMove;
+                } 
+                else
+                    Agent.letterBox.nbMove  = 0;
+
+                // On utlise StartWith du à la spécificité de la regex qui essaye d'être moins sensible a une mauvaise compréhenssion de google speech
+                if(match[posAgentDirection].startsWith("gau"))
+                    Agent.letterBox.direction = Agent.CODE[37];
+                else if(match[posAgentDirection].startsWith("hau"))
+                    Agent.letterBox.direction = Agent.CODE[38];
+                else if(match[posAgentDirection].startsWith("droi"))
+                    Agent.letterBox.direction = Agent.CODE[39];
+                else if(match[posAgentDirection].startsWith("ba"))
+                    Agent.letterBox.direction = Agent.CODE[40];
+            }
+            else
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+        }
+    },
+    {
+        phrases: [
+            "Monter xx de xx",
+            "Descendre xx de xx"
+        ],
+        action: function (phrase) {
+            /*
+            Monter toto de 3 - 1 2 4
+            Descendre toto de 3 - 1 2 4
+            */
+            var myRegexp = /(m[^\s]+|d[^\s]+) (.*)(de |d')(.*)/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                if(match[2] != "")
+                {
+                    bestMatch = findBestMatch(match[2], allPossibleName).bestMatch;
+                    var element = document.getElementById(bestMatch.target);
+                    element.click();
+                }
+
+                if(match[4] != null)
+                {
+                    var nbMove = convertLetterNumbersFromGoogleSpeechToInt(match[4]);
+                    Agent.letterBox.nbMove = nbMove;
+                } 
+                else
+                    Agent.letterBox.nbMove  = 0;
+
+                // On utlise StartWith du à la spécificité de la regex qui essaye d'être moins sensible a une mauvaise compréhenssion de google speech
+                if(match[1].startsWith("m"))
+                    Agent.letterBox.direction = Agent.CODE[38];
+                else if(match[1].startsWith("d"))
+                    Agent.letterBox.direction = Agent.CODE[40];
+            }
+            else
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+        }
     }
 ]; 
+
+
+function convertLetterNumbersFromGoogleSpeechToInt(str)
+{
+    switch(str)
+    {
+        case "zéro" : 
+            str = 0; break;
+        case "un" : 
+        case "une" : 
+        case "seins" :
+            str = 1; break; // Du à google speech
+        case "deux" : 
+            str = 2; break;
+        case "trois" :
+        case "troyes" : 
+            str = 3; break; // Du à google speech
+        case "quatre" : 
+            str = 4; break;
+        case "cinq" : 
+            str = 5; break;
+        case "six" : 
+            str = 6; break;
+        case "sept" : 
+            str = 7; break;
+        case "huit" : 
+            str = 8; break;
+        case "neuf" : 
+            str = 9; break;
+        case "dix" : 
+            str = 10; break;
+        // Après 10 en général ils sont compris et écrit en chiffre directement par Google Speech
+    }
+
+    return parseInt(str);
+}
