@@ -36,7 +36,7 @@ function speechToAction(phrase) {
         allPossibleName.push(agents[i]._opts.name);
         
     match = findBestMatch(phrase, allPossiblePhrase);
-    console.log(match);
+    //console.log(match);
     bestMatch = match.bestMatch;
     bestMatch.target = bestMatch.target.replace(/[_]+/g, '');
     console.log("Phrase recognized : " + phrase + "       Best match : " + bestMatch.target);
@@ -162,21 +162,56 @@ var dict = [
     {
         phrases: [
             "Déplacer xx vers xx de xx",
-            "Bouger xx vers xx de xx"
+            "Bouger xx vers xx de xx",
+            "Déplacer xx de xx vers xx",
+            "Bouger xx de xx vers xx"
         ],
         action: function (phrase) {
-            var myRegexp = /(bouger|déplacer) (.*)vers .* (droite|gauche|bas|haut) de (\d+)|(bouger|déplacer) (.*)vers .* (droite|gauche|bas|haut)/i;
+            /*
+
+            Pour test la regex dans tout les cas possible ( le - x y z, sont les numéros de groupe qui doivent match ):
+            déplacer toto de 3 vers la droite - 2 3 5
+            bouger toto de 3 vers la droite - 2 3 5
+            déplacer de 3 vers la droite  - 2 3 5
+            bouger de 3 vers la droite  - 2 3 5
+
+            déplacer toto vers la droite de 3 - 7 8 9
+            bouger toto vers la droite de 3  - 7 8 9
+            déplacer vers la droite de 3 - 7 8 9
+            bouger vers la droite de 3 - 7 8 9
+
+            déplacer toto vers la droite - 11 12
+            bouger toto vers la droite - 11 12
+            déplacer vers la droite - 11 12 
+            bouger vers la droite - 11 12
+
+            */
+            var myRegexp = /(bouger|déplacer) (.*)de (\d+) vers (le|la) (droite|gauche|bas|haut)|(bouger|déplacer) (.*)vers .* (droite|gauche|bas|haut) de (\d+)|(bouger|déplacer) (.*)vers .* (droite|gauche|bas|haut)/i;
             var match = myRegexp.exec(phrase);
             
             if(match != null)
             {
-                var posAgentName = 2;
-                var posAgentDirection = 3;
-                var posNbMove = 4;
-                if(match[6] != null)
+                var posAgentName = 0;
+                var posAgentDirection = 0;
+                var posNbMove = 0;
+                if(match[2] != null)
                 {
-                    posAgentName = 6;
-                    posAgentDirection = 7;
+                    posAgentName = 2;
+                    posAgentDirection = 5;
+                    posNbMove = 3;
+                }
+                else if(match[7] != null)
+                {
+                    posAgentName = 7;
+                    posAgentDirection = 8;
+                    posNbMove = 9;
+                }
+                
+                if(match[11] != null)
+                {
+                    posAgentName = 11;
+                    posAgentDirection = 12;
+                    posNbMove = 1;
                 }
 
                 if(match[posAgentName] != "")
@@ -186,8 +221,8 @@ var dict = [
                     agent.click();
                 }
                 
-                if(match[posNbMove] != null)
-                    Agent.letterBox.nbMove = match[posNbMove];
+                if(match[posNbMove] != null && parseInt(match[posNbMove]) != NaN)
+                    Agent.letterBox.nbMove = parseInt(match[posNbMove]);
                 else
                     Agent.letterBox.nbMove  = 0;
 
@@ -202,6 +237,25 @@ var dict = [
             }
             else
                 notifyError("No matching", "Phrase understood : " + phrase);
+        }
+    },
+    {
+        phrases: [
+            "Sélectionner xx"
+        ],
+        action: function (phrase) {
+            var myRegexp = /Sélectionn.. (.*)/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                if(match[1])
+                {
+                    bestMatch = findBestMatch(match[1], allPossibleName).bestMatch;
+                    var agent = document.getElementById(bestMatch.target);
+                    agent.click();
+                }
+            }
         }
     }
 ]; 
