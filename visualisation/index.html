@@ -27,7 +27,10 @@ and open the template in the editor.
 
 </head>
 <body id="body">
+
 <script src="./config.js"></script>
+<script src="../core/utils/bootstrap-notify.min.js"></script>
+<script src="../core/utils/utils.js"></script>
 <script src="../core/utils/exception/ExceptionBound.js"></script>
 <script src="../core/utils/exception/SubClassesResponsability.js"></script>
 <script src="../core/utils/seedrandom.js"></script>
@@ -48,6 +51,12 @@ and open the template in the editor.
 <script src="../core/vue/Trace.js"></script>
 <script src="../core/vue/VueFactory.js"></script>
 <script src="../core/main.js"></script>
+<script src="../core/speechRecognition/underscore.min.js"></script>
+<script src="../core/speechRecognition/underscore.string.min.js"></script>
+<script src="../core/speechRecognition/lodash.js"></script>
+<script src="../core/speechRecognition/compare-strings.js"></script>
+<script src="../core/speechRecognition/speechToAction.js"></script>
+<script src="../core/speechRecognition/speechRecognition.js"></script>
 
 <div class="col-xs-12" id="componante">
     <div id="core">
@@ -89,6 +98,9 @@ and open the template in the editor.
                             </ul>
                         </li>
                     </ul>
+                    <div class="navbar-form navbar-nav">
+                        <img id="start_img" src="../ressources/mic.gif" alt="Start" class="img-responsive" style=" margin: -7px; margin-top: 0px;" onclick="startButton(event)">
+                    </div>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -111,5 +123,6 @@ and open the template in the editor.
         <div id="detailsSelected"></div>
     </div>
 </div>
+
 </body>
 </html>

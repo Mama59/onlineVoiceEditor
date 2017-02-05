@@ -106,9 +106,8 @@ class PanelVue {
             var li = document.createElement("li");
             var element = document.createElement('a');
             element.agent = agent;
-            var id = "x" + agent.x() + "y" + agent.y();
-            element.innerHTML = id + " " + agent._type;
-            element.id = id;
+            element.innerHTML = agent._opts.name;
+            element.id =  agent._opts.name;
             element.href = '#';
             element.onclick = agent.onclick;
             li.appendChild(element);
@@ -139,6 +138,7 @@ class PanelVue {
             var element = document.createElement('a');
             element.innerHTML = 'Create ' + elementType.name;
             element.href = '#';
+            element.id = 'idCreate'+ elementType.name;
             element.onclick = this._createElement;
             element.env = this._env;
             element.opts = {type: 'number'};
@@ -150,6 +150,7 @@ class PanelVue {
         var li = document.createElement("li");
         var element = document.createElement('a');
         element.innerHTML = 'Add line';
+        element.id = 'idAddLine';
         element.href = '#';
         element.onclick = this._env.addX;
         element.env = this._env;
@@ -161,5 +162,11 @@ class PanelVue {
         var env = this.env;
         var type = this.elementType;
         env.addAgent(createAgent(type.name, 0, 0, env, null, null, type.opts));
+    }
+
+    _createSpecifiedElement(elementType) {
+        var agent = createAgent(elementType, 0, 0, this._env, null, null, elementType.opts);
+        this._env.addAgent(agent);
+        return agent;
     }
 }

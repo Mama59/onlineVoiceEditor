@@ -1,3 +1,6 @@
+var panel;
+var agents = [];
+
 class Game {
   constructor() {
     Game.play();
@@ -36,14 +39,13 @@ Game.createTrace = function () {
 
 Game.createPanel = function () {
   if (config.panel) {
-    var panel = new PanelVue(document.getElementById('panel'), Game.env);
+    panel = new PanelVue(document.getElementById('panel'), Game.env);
     Game.sma.addObserver(panel);
   }
 };
 
 Game.play = function () {
   Game.env = new Environment(config.grid.size.x, config.grid.size.y, config.grid.toric);
-  var agents = [];
   Math.seedrandom(config.seed || Math.random() + '');
   Game.sma = Game.createAgents(config.particules, agents);
   Game.createTrace();

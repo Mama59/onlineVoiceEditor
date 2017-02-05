@@ -13,6 +13,7 @@ class Agent {
         self._opts = opts || {};
         self._opts.name = 'test' + this.constructor.name;
         self._opts.size = self._opts.size > 0 && self._opts.size < 13 ? self._opts.size : 1;
+        self._countMove = 0;
         
         self.setListenKey(true);
         self._env = env;
@@ -93,7 +94,15 @@ class Agent {
     }
     
     decide() {
-        if (this._listenKey) {
+
+        if(this.constructor.letterBox.direction.x == 0 && this.constructor.letterBox.direction.y == 0)
+        {
+            this._countMove = 0;
+            return;
+        }
+            
+        if (this._listenKey && (this.constructor.letterBox.nbMove == 0 || this._countMove < this.constructor.letterBox.nbMove)) {
+
             var pos = {
                 x: this._pos.x + this.constructor.letterBox.direction.x,
                 y: this._pos.y + this.constructor.letterBox.direction.y
@@ -101,7 +110,11 @@ class Agent {
             if (this._perception(pos)) {
                 this._move(pos);
             }
+            if(this.constructor.letterBox.nbMove != 0)
+                this._countMove++;
         }
+        else if(this.constructor.letterBox.nbMove != 0 && this._countMove >= this.constructor.letterBox.nbMove)
+            Agent.letterBox = {lastDirection: {x: 0, y: 0}, direction: {x: 0, y: 0}};
     };
     
     _move(pos) {
@@ -167,3 +180,4 @@ Agent.direction = [
 
 Agent.CODE = {38: {x: -1, y: 0}, 39: {x: 0, y: 1}, 40: {x: 1, y: 0}, 37: {x: 0, y: -1}, 32: {x: 0, y: 0}};
 Agent.letterBox = {lastDirection: {x: 0, y: 0}, direction: {x: 0, y: 0}};
+Agent.letterBox.nbMove = 0;

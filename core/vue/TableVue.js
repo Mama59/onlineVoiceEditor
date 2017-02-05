@@ -51,7 +51,7 @@ class TableVue {
             
             for (var y = 0; y < this._env.ySize(); y++) {
                 var agent = this._env.getCase({x: x, y: y}).agent;
-                var id = "x" + x + "y" + y;
+                var id = x*y;
                 var td;
                 td = document.createElement('div');
                 td.className = "col-xs-1";
@@ -66,6 +66,7 @@ class TableVue {
                     element.innerHTML = agent._html;
                     element.onclick = agent.onclick;
                     element.agent = agent;
+                    element.id = agent._opts.name;
                     
                     if (agent._opts) {
                         for (var name in agent._opts) {
