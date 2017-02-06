@@ -14,6 +14,7 @@ class Agent {
         self._opts.name = 'test' + this.constructor.name;
         self._opts.size = self._opts.size > 0 && self._opts.size < 13 ? self._opts.size : 1;
         self._countMove = 0;
+        self._finishToMove = true;
         
         self.setListenKey(true);
         self._env = env;
@@ -42,7 +43,8 @@ class Agent {
         }
         
         if (key == 'size') {
-            this._opts.size = parseInt(this._opts.size);
+            if(!isNaN(parseInt(this._opts.size)))
+                this._opts.size = parseInt(this._opts.size);
         }
         
         this._env._sma._hasChangedPanel = true;
@@ -99,11 +101,12 @@ class Agent {
         if(this.constructor.letterBox.direction.x == 0 && this.constructor.letterBox.direction.y == 0)
         {
             this._countMove = 0;
+            Agent.letterBox.nbMove = 0;
             return;
         }
             
-        if (this._listenKey && (this.constructor.letterBox.nbMove == 0 || this._countMove < this.constructor.letterBox.nbMove)) {
-
+        if (this._listenKey && (Agent.letterBox.nbMove == 0 || this._countMove < Agent.letterBox.nbMove)) {
+            this._finishToMove = false;
             var pos = {
                 x: this._pos.x + this.constructor.letterBox.direction.x,
                 y: this._pos.y + this.constructor.letterBox.direction.y
@@ -111,11 +114,15 @@ class Agent {
             if (this._perception(pos)) {
                 this._move(pos);
             }
-            if(this.constructor.letterBox.nbMove != 0)
+            if(Agent.letterBox.nbMove != 0)
                 this._countMove++;
         }
-        else if(this.constructor.letterBox.nbMove != 0 && this._countMove >= this.constructor.letterBox.nbMove)
+        else if(Agent.letterBox.nbMove != 0 && this._countMove >= Agent.letterBox.nbMove)
+        {
             Agent.letterBox = {lastDirection: {x: 0, y: 0}, direction: {x: 0, y: 0}};
+            this._finishToMove = true;
+        }
+            
     };
     
     _move(pos) {

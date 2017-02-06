@@ -1,63 +1,89 @@
 var allPossiblePhrase = [];
 var allPossibleName = [];
+var actionFinished = false;
+
+var selectedAgent = null;
 
 function speechToAction(phrase) {
 
+    phrase = phrase.replace(" et 2 ", " et de ");
+    console.log("Brut phrase : " + phrase);
+
     phrase = phrase.toLowerCase();
 
-    var possiblePhraseMaxLenght = 0;
-    if(allPossiblePhrase.length < 1)
+    var phrasesplited = phrase.split(" et ");
+    for(var nbSplit = 0; nbSplit < phrasesplited.length; nbSplit++)
     {
+        //if(selectedAgent != null)
+        //{
+        //    while(!selectedAgent._finishToMove)
+        //        sleep(300); 
+        //}
+
+        phrase = phrasesplited[nbSplit];
+        if(phrase.indexOf(" hau") > -1 || phrase.indexOf(" ba") > -1 || phrase.indexOf(" gauc") > -1 || phrase.indexOf(" droi") > -1)
+        {
+            if(!(phrase.startsWith("déplacer de")  || phrase.startsWith("bouger de")))
+                phrase = "déplacer de " + phrase;
+            else if(!(phrase.startsWith("déplacer ") || phrase.startsWith("bouger ")))
+                phrase = "déplacer " + phrase;
+        }
+
+        var possiblePhraseMaxLenght = 0;
+        if(allPossiblePhrase.length < 1)
+        {
+            for(var i = 0; i < dict.length; i++)
+            {
+                for(var j = 0; j < dict[i].phrases.length; j++)
+                {
+                    allPossiblePhrase.push(dict[i].phrases[j].toLowerCase());
+                    if(dict[i].phrases[j].length > possiblePhraseMaxLenght)
+                        possiblePhraseMaxLenght = dict[i].phrases[j].length;
+                }
+            }  
+            possiblePhraseMaxLenght += 50;
+
+            // Cette partie permet de mettre tout les strings de référence à égalité pour les comparaisons
+            for(var i = 0; i < allPossiblePhrase.length; i++)
+            {
+                var tmp = allPossiblePhrase[i];
+                for (var j =  allPossiblePhrase[i].length; j < possiblePhraseMaxLenght; j++) {
+                    tmp += "_";
+                }
+                allPossiblePhrase[i] = tmp;
+            }
+        }
+
+        if(phrase == "")
+            return;
+
+        allPossibleName = [];
+        for(var i = 0; i < agents.length; i++)
+            allPossibleName.push(agents[i]._opts.name);
+            
+        match = findBestMatch(phrase, allPossiblePhrase);   
+        bestMatch = match.bestMatch;
+        bestMatch.target = bestMatch.target.replace(/[_]+/g, '');
+        console.log("Phrase recognized : " + phrase + "       Best match : " + bestMatch.target);
+
+        if(bestMatch.rating < 0.05)
+        {
+            notifyError("No matching", "Phrase understood : " + phrase + "(Rating : " + bestMatch.rating + " )");
+            return;
+        }
+
         for(var i = 0; i < dict.length; i++)
         {
             for(var j = 0; j < dict[i].phrases.length; j++)
             {
-                allPossiblePhrase.push(dict[i].phrases[j].toLowerCase());
-                if(dict[i].phrases[j].length > possiblePhraseMaxLenght)
-                    possiblePhraseMaxLenght = dict[i].phrases[j].length;
-            }
-        }  
-        possiblePhraseMaxLenght += 50;
-
-        // Cette partie permet de mettre tout les strings de référence à égalité pour les comparaisons
-        for(var i = 0; i < allPossiblePhrase.length; i++)
-        {
-            var tmp = allPossiblePhrase[i];
-            for (var j =  allPossiblePhrase[i].length; j < possiblePhraseMaxLenght; j++) {
-                tmp += "_";
-            }
-            allPossiblePhrase[i] = tmp;
-        }
-    }
-
-    if(phrase == "")
-        return;
-
-    allPossibleName = [];
-    for(var i = 0; i < agents.length; i++)
-        allPossibleName.push(agents[i]._opts.name);
-        
-    match = findBestMatch(phrase, allPossiblePhrase);   
-    bestMatch = match.bestMatch;
-    bestMatch.target = bestMatch.target.replace(/[_]+/g, '');
-    console.log("Phrase recognized : " + phrase + "       Best match : " + bestMatch.target);
-
-    if(bestMatch.rating < 0.05)
-    {
-        notifyError("No matching", "Phrase understood : " + phrase + "(Rating : " + bestMatch.rating + " )");
-        return;
-    }
-
-    for(var i = 0; i < dict.length; i++)
-    {
-        for(var j = 0; j < dict[i].phrases.length; j++)
-        {
-            if(dict[i].phrases[j].toLowerCase() == bestMatch.target)
-            {
-                dict[i].action(phrase);
+                if(dict[i].phrases[j].toLowerCase() == bestMatch.target)
+                {
+                    dict[i].action(phrase);
+                    break;
+                }
             }
         }
-    }  
+    }
 }  
 
 var dict = [
@@ -156,16 +182,23 @@ var dict = [
             "Mettre xx ligne"
         ],
         action: function (phrase) {
-            var myRegexp = /(\d+)/i;
-            var match = myRegexp.exec(phrase);
-            if(match != null)
+            try
             {
-                var nbLine = convertLetterNumbersFromGoogleSpeechToInt(match[1])
-                for(var i = 0; i < nbLine; i++)
+                var myRegexp = /(\d+)/i;
+                var match = myRegexp.exec(phrase);
+                if(match != null)
+                {
+                    var nbLine = convertLetterNumbersFromGoogleSpeechToInt(match[1])
+                    for(var i = 0; i < nbLine; i++)
+                        document.getElementById('idAddLine').click();
+                }
+                else
                     document.getElementById('idAddLine').click();
             }
-            else
-                document.getElementById('idAddLine').click();
+            catch(e)
+            {
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+            }
         }
     },
     {
@@ -173,17 +206,25 @@ var dict = [
             "Sélectionner xx"
         ],
         action: function (phrase) {
-            var myRegexp = /Sélectionn.. (.*)/i;
-            var match = myRegexp.exec(phrase);
-            
-            if(match != null)
+            try
             {
-                if(match[1] != "")
+                var myRegexp = /Sélectionn.. (.*)/i;
+                var match = myRegexp.exec(phrase);
+                
+                if(match != null)
                 {
-                    bestMatch = findBestMatch(match[1], allPossibleName).bestMatch;
-                    var element = document.getElementById(bestMatch.target);
-                    element.click();
+                    if(match[1] != "")
+                    {
+                        bestMatch = findBestMatch(match[1], allPossibleName).bestMatch;
+                        var element = document.getElementById(bestMatch.target);
+                        element.click();
+                    }
                 }
+            }
+            catch(e)
+            {
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+                actionFinished = true;
             }
         }
     },
@@ -203,50 +244,55 @@ var dict = [
             "Changer xx de xx par xx"
         ],
         action: function (phrase) {
-            /*
-            Modifier la propriété name de toto avec azerty - 5 7 9
-            Changer la propriété name de toto avec azerty - 5 7 9
-            Modifier name de toto avec azerty - 5 7 9
-            Changer name de toto avec azerty - 5 7 9
-            Modifier name avec azerty - 14 16
-            Changer name avec azerty - 14 16
-            */
-
-            var myRegexp = /(modi[^\s]+|chang[^\s]+) (la propriété |)((le|la) |)(.*)( de )(.*)( avec | par | en | à )(.*)|(modi[^\s]+|chang[^\s]+) (la propriété |)((le|la) |)(.*)( avec | par | en | à )(.*)/i;
-            var match = myRegexp.exec(phrase);
-            
-            var property = "";
-            var elementName = "";
-            var newValue = "";
-
-            if(match[5] != null)
+            try
             {
-                property = match[5];
-                elementName = match[7];
-                newValue = match[9];
-            }
-            else if(match[14] != null)
-            {
-                property = match[14];
-                newValue = match[16];
-            }
+                /*
+                Modifier la propriété name de toto avec azerty - 5 7 9
+                Changer la propriété name de toto avec azerty - 5 7 9
+                Modifier name de toto avec azerty - 5 7 9
+                Changer name de toto avec azerty - 5 7 9
+                Modifier name avec azerty - 14 16
+                Changer name avec azerty - 14 16
+                */
 
-            if(elementName != "")
-            {
+                var myRegexp = /(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( de )(.*)( avec | par | en | à | a )(.*)|(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( avec | par | en | à | a )(.*)/i;
+                var match = myRegexp.exec(phrase);
+                
+                var property = "";
+                var elementName = "";
+                var newValue = "";
+
+                if(match[5] != null)
+                {
+                    property = match[5];
+                    elementName = match[7];
+                    newValue = match[9];
+                }
+                else if(match[14] != null)
+                {
+                    property = match[14];
+                    newValue = match[16];
+                }
+
+                if(elementName == "")
+                    elementName = Agent.selected._opts.name;
+
                 bestMatch = findBestMatch(elementName, allPossibleName).bestMatch;
                 var element = document.getElementById(bestMatch.target);
                 element.click();
-            }
 
-            if(property != "")
+                if(property != "")
+                {
+                    if(newValue == "rien")
+                        Agent.selected._opts[property] = "";
+                    else
+                        Agent.selected._opts[property] = convertLetterNumbersFromGoogleSpeechToInt(newValue);
+                }
+            }
+            catch(e)
             {
-                if(newValue == "rien")
-                    Agent.selected._opts[property] = "";
-                else
-                    Agent.selected._opts[property] = newValue;
-            }
-                
-
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+            }            
         }
     },
     {
@@ -263,129 +309,141 @@ var dict = [
             "Bouger xx de xx sur xx"
         ],
         action: function (phrase) {
-            /*
-                Pour test la regex dans tout les cas possible ( le - x y z, sont les numéros de groupe qui doivent match ):
-
-                déplacer toto de 3 à droite - 2 3 7
-                bouger toto de 3 à droite - 2 3 7
-                déplacer de 3 à droite  - 2 3 7
-                bouger de 3 à droite  - 2 3 7
-                ---
-                déplacer toto de 3 vers la droite - 2 3 7
-                bouger toto de 3 vers la droite - 2 3 7
-                déplacer de 3 vers la droite  - 2 3 7
-                bouger de 3 vers la droite  - 2 3 7
-                ------------------------------------
-                déplacer toto à droite de 3 - 9 11 12
-                bouger toto à droite de 3  - 9 11 12
-                déplacer à droite de 3 - 9 11 12
-                bouger à droite de 3 - 9 11 12
-                ---
-                déplacer toto vers la droite de 3 - 9 11 12
-                bouger toto vers la droite de 3  - 9 11 12
-                déplacer vers la droite de 3 - 9 11 12
-                bouger vers la droite de 3 - 9 11 12
-                ------------------------------------
-                déplacer toto à droite - 14 16
-                bouger toto à droite - 14 16
-                déplacer à droite - 14 16
-                bouger à droite - 14 16
-                ---
-                déplacer toto vers la droite - 14 16
-                bouger toto vers la droite - 14 16
-                déplacer vers la droite - 14 16
-                bouger vers la droite - 14 16
-            */
-
-            // Dans cette regex chaque fois que l'on trouve [^\s] c'est parce que ainsi on est moins senseible a une mauvaise compréhenssion de google speech
-            var myRegexp = /(bou[^\s]+|dépla[^\s]+) (.*)de (.*) (à|vers (le|la)|sur (le|la)) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+)|(bou[^\s]+|dépla[^\s]+) (.*)(à|vers .*|sur .*) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+) de (.*)|(bou[^\s]+|dépla[^\s]+) (.*)(à|vers .*|sur .*) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+)/i;
-            // regex qui pourrait améliorer la précédente en partie mais pas du tout finie, donc juste une base si on veut évoluer dessus : (bou[^\s]+|dépla[^\s]+) ([^\s]+) (à |(vers .* |vers |.* )|)(droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+) (de |)(\d+|)
-            var match = myRegexp.exec(phrase);
-            
-            if(match != null)
+            try
             {
-                var posAgentName = 0;
-                var posAgentDirection = 0;
-                var posNbMove = 0;
                 /*
-                déplacer toto de 3 à droite - 2 3 7
-                bouger toto de 3 à droite - 2 3 7
-                déplacer de 3 à droite  - 2 3 7
-                bouger de 3 à droite  - 2 3 7
-                ---
-                déplacer toto de 3 vers la droite - 2 3 7
-                bouger toto de 3 vers la droite - 2 3 7
-                déplacer de 3 vers la droite  - 2 3 7
-                bouger de 3 vers la droite  - 2 3 7
-                */
-                if(match[2] != null)
-                {
-                    posAgentName = 2;
-                    posAgentDirection = 7;
-                    posNbMove = 3;
-                }
-                /*
-                déplacer toto à droite de 3 - 9 11 12
-                bouger toto à droite de 3  - 9 11 12
-                déplacer à droite de 3 - 9 11 12
-                bouger à droite de 3 - 9 11 12
-                ---
-                déplacer toto vers la droite de 3 - 9 11 12
-                bouger toto vers la droite de 3  - 9 11 12
-                déplacer vers la droite de 3 - 9 11 12
-                bouger vers la droite de 3 - 9 11 12
-                */
-                else if(match[9] != null)
-                {
-                    posAgentName = 9;
-                    posAgentDirection = 11;
-                    posNbMove = 12;
-                }
-                /*
-                déplacer toto à droite - 14 16
-                bouger toto à droite - 14 16
-                déplacer à droite - 14 16
-                bouger à droite - 14 16
-                ---
-                déplacer toto vers la droite - 14 16
-                bouger toto vers la droite - 14 16
-                déplacer vers la droite - 14 16
-                bouger vers la droite - 14 16
-                */
-                if(match[14] != null)
-                {
-                    posAgentName = 14;
-                    posAgentDirection = 16;
-                    posNbMove = 1;
-                }
+                    Pour test la regex dans tout les cas possible ( le - x y z, sont les numéros de groupe qui doivent match ):
 
-                if(match[posAgentName] != "")
-                {
-                    bestMatch = findBestMatch(match[posAgentName], allPossibleName).bestMatch;
-                    var element = document.getElementById(bestMatch.target);
-                    element.click();
-                }
+                    déplacer toto de 3 à droite - 2 3 7
+                    bouger toto de 3 à droite - 2 3 7
+                    déplacer de 3 à droite  - 2 3 7
+                    bouger de 3 à droite  - 2 3 7
+                    ---
+                    déplacer toto de 3 vers la droite - 2 3 7
+                    bouger toto de 3 vers la droite - 2 3 7
+                    déplacer de 3 vers la droite  - 2 3 7
+                    bouger de 3 vers la droite  - 2 3 7
+                    ------------------------------------
+                    déplacer toto à droite de 3 - 9 11 12
+                    bouger toto à droite de 3  - 9 11 12
+                    déplacer à droite de 3 - 9 11 12
+                    bouger à droite de 3 - 9 11 12
+                    ---
+                    déplacer toto vers la droite de 3 - 9 11 12
+                    bouger toto vers la droite de 3  - 9 11 12
+                    déplacer vers la droite de 3 - 9 11 12
+                    bouger vers la droite de 3 - 9 11 12
+                    ------------------------------------
+                    déplacer toto à droite - 14 16
+                    bouger toto à droite - 14 16
+                    déplacer à droite - 14 16
+                    bouger à droite - 14 16
+                    ---
+                    déplacer toto vers la droite - 14 16
+                    bouger toto vers la droite - 14 16
+                    déplacer vers la droite - 14 16
+                    bouger vers la droite - 14 16
+                */
+
+                // Dans cette regex chaque fois que l'on trouve [^\s] c'est parce que ainsi on est moins senseible a une mauvaise compréhenssion de google speech
+                var myRegexp = /(bou[^\s]+|dépla[^\s]+) (.*)de (.*) (à|vers (le|la)|sur (le|la)) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+)|(bou[^\s]+|dépla[^\s]+) (.*)(à|vers .*|sur .*) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+) de (.*)|(bou[^\s]+|dépla[^\s]+) (.*)(à|vers .*|sur .*) (droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+)/i;
+                // regex qui pourrait améliorer la précédente en partie mais pas du tout finie, donc juste une base si on veut évoluer dessus : (bou[^\s]+|dépla[^\s]+) ([^\s]+) (à |(vers .* |vers |.* )|)(droi[^\s]+|gau[^\s]+|ba[^\s]+|hau[^\s]+) (de |)(\d+|)
+                var match = myRegexp.exec(phrase);
                 
-                if(match[posNbMove] != null)
+                if(match != null)
                 {
-                    var nbMove = convertLetterNumbersFromGoogleSpeechToInt(match[posNbMove]);
-                    Agent.letterBox.nbMove = nbMove;
-                } 
-                else
-                    Agent.letterBox.nbMove  = 0;
+                    var posAgentName = 0;
+                    var posAgentDirection = 0;
+                    var posNbMove = 0;
+                    /*
+                    déplacer toto de 3 à droite - 2 3 7
+                    bouger toto de 3 à droite - 2 3 7
+                    déplacer de 3 à droite  - 2 3 7
+                    bouger de 3 à droite  - 2 3 7
+                    ---
+                    déplacer toto de 3 vers la droite - 2 3 7
+                    bouger toto de 3 vers la droite - 2 3 7
+                    déplacer de 3 vers la droite  - 2 3 7
+                    bouger de 3 vers la droite  - 2 3 7
+                    */
+                    if(match[2] != null)
+                    {
+                        posAgentName = 2;
+                        posAgentDirection = 7;
+                        posNbMove = 3;
+                    }
+                    /*
+                    déplacer toto à droite de 3 - 9 11 12
+                    bouger toto à droite de 3  - 9 11 12
+                    déplacer à droite de 3 - 9 11 12
+                    bouger à droite de 3 - 9 11 12
+                    ---
+                    déplacer toto vers la droite de 3 - 9 11 12
+                    bouger toto vers la droite de 3  - 9 11 12
+                    déplacer vers la droite de 3 - 9 11 12
+                    bouger vers la droite de 3 - 9 11 12
+                    */
+                    else if(match[9] != null)
+                    {
+                        posAgentName = 9;
+                        posAgentDirection = 11;
+                        posNbMove = 12;
+                    }
+                    /*
+                    déplacer toto à droite - 14 16
+                    bouger toto à droite - 14 16
+                    déplacer à droite - 14 16
+                    bouger à droite - 14 16
+                    ---
+                    déplacer toto vers la droite - 14 16
+                    bouger toto vers la droite - 14 16
+                    déplacer vers la droite - 14 16
+                    bouger vers la droite - 14 16
+                    */
+                    if(match[14] != null)
+                    {
+                        posAgentName = 14;
+                        posAgentDirection = 16;
+                        posNbMove = 1;
+                    }
 
-                // On utlise StartWith du à la spécificité de la regex qui essaye d'être moins sensible a une mauvaise compréhenssion de google speech
-                if(match[posAgentDirection].startsWith("gau"))
-                    Agent.letterBox.direction = Agent.CODE[37];
-                else if(match[posAgentDirection].startsWith("hau"))
-                    Agent.letterBox.direction = Agent.CODE[38];
-                else if(match[posAgentDirection].startsWith("droi"))
-                    Agent.letterBox.direction = Agent.CODE[39];
-                else if(match[posAgentDirection].startsWith("ba"))
-                    Agent.letterBox.direction = Agent.CODE[40];
+                    if(match[posAgentName] != "")
+                    {
+                        bestMatch = findBestMatch(match[posAgentName], allPossibleName).bestMatch;
+                        var element = document.getElementById(bestMatch.target);
+                        element.click();
+                    }
+                    
+                    if(match[posNbMove] != null)
+                    {
+                        var nbMove = convertLetterNumbersFromGoogleSpeechToInt(match[posNbMove]);
+                        Agent.letterBox.nbMove = nbMove;
+                    } 
+                    else
+                        Agent.letterBox.nbMove  = 0;
+
+                    // On utlise StartWith du à la spécificité de la regex qui essaye d'être moins sensible a une mauvaise compréhenssion de google speech
+                    if(match[posAgentDirection].startsWith("gau"))
+                        Agent.letterBox.direction = Agent.CODE[37];
+                    else if(match[posAgentDirection].startsWith("hau"))
+                        Agent.letterBox.direction = Agent.CODE[38];
+                    else if(match[posAgentDirection].startsWith("droi"))
+                        Agent.letterBox.direction = Agent.CODE[39];
+                    else if(match[posAgentDirection].startsWith("ba"))
+                        Agent.letterBox.direction = Agent.CODE[40];
+                }
+                else
+                    notifyError("No regex matching", "Phrase understood : " + phrase);
             }
-            else
+            catch(e)
+            {
                 notifyError("No regex matching", "Phrase understood : " + phrase);
+            }
+            finally
+            {
+                //selectedAgent = Agent.selected;
+                //selectedAgent._finishToMove = false;
+            }
         }
     },
     {
@@ -394,38 +452,50 @@ var dict = [
             "Descendre xx de xx"
         ],
         action: function (phrase) {
-            /*
-            Monter toto de 3 - 1 2 4
-            Descendre toto de 3 - 1 2 4
-            */
-            var myRegexp = /(m[^\s]+|d[^\s]+) (.*)(de |d')(.*)/i;
-            var match = myRegexp.exec(phrase);
-            
-            if(match != null)
+            try
             {
-                if(match[2] != "")
+                /*
+                Monter toto de 3 - 1 2 4
+                Descendre toto de 3 - 1 2 4
+                */
+                var myRegexp = /(m[^\s]+|d[^\s]+) (.*)(de |d')(.*)/i;
+                var match = myRegexp.exec(phrase);
+                
+                if(match != null)
                 {
-                    bestMatch = findBestMatch(match[2], allPossibleName).bestMatch;
-                    var element = document.getElementById(bestMatch.target);
-                    element.click();
+                    if(match[2] != "")
+                    {
+                        bestMatch = findBestMatch(match[2], allPossibleName).bestMatch;
+                        var element = document.getElementById(bestMatch.target);
+                        element.click();
+                    }
+
+                    if(match[4] != null)
+                    {
+                        var nbMove = convertLetterNumbersFromGoogleSpeechToInt(match[4]);
+                        Agent.letterBox.nbMove = nbMove;
+                    } 
+                    else
+                        Agent.letterBox.nbMove  = 0;
+
+                    // On utlise StartWith du à la spécificité de la regex qui essaye d'être moins sensible a une mauvaise compréhenssion de google speech
+                    if(match[1].startsWith("m"))
+                        Agent.letterBox.direction = Agent.CODE[38];
+                    else if(match[1].startsWith("d"))
+                        Agent.letterBox.direction = Agent.CODE[40];
                 }
-
-                if(match[4] != null)
-                {
-                    var nbMove = convertLetterNumbersFromGoogleSpeechToInt(match[4]);
-                    Agent.letterBox.nbMove = nbMove;
-                } 
                 else
-                    Agent.letterBox.nbMove  = 0;
-
-                // On utlise StartWith du à la spécificité de la regex qui essaye d'être moins sensible a une mauvaise compréhenssion de google speech
-                if(match[1].startsWith("m"))
-                    Agent.letterBox.direction = Agent.CODE[38];
-                else if(match[1].startsWith("d"))
-                    Agent.letterBox.direction = Agent.CODE[40];
+                    notifyError("No regex matching", "Phrase understood : " + phrase);
             }
-            else
+            catch(e)
+            {
                 notifyError("No regex matching", "Phrase understood : " + phrase);
+            }
+            finally
+            {
+                //selectedAgent = Agent.selected;
+                //selectedAgent._finishToMove = false;
+            }
         }
     }
 ]; 
@@ -440,8 +510,10 @@ function convertLetterNumbersFromGoogleSpeechToInt(str)
         case "un" : 
         case "une" : 
         case "seins" :
+        case "hein":
             str = 1; break; // Du à google speech
         case "deux" : 
+        case "de" :
             str = 2; break;
         case "trois" :
         case "troyes" : 
@@ -453,6 +525,8 @@ function convertLetterNumbersFromGoogleSpeechToInt(str)
         case "six" : 
             str = 6; break;
         case "sept" : 
+        case "cet" : 
+        case "cette" : 
             str = 7; break;
         case "huit" : 
             str = 8; break;
@@ -463,5 +537,5 @@ function convertLetterNumbersFromGoogleSpeechToInt(str)
         // Après 10 en général ils sont compris et écrit en chiffre directement par Google Speech
     }
 
-    return parseInt(str);
+    return str;
 }
