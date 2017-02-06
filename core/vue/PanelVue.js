@@ -73,7 +73,14 @@ class PanelVue {
                 document.getElementById("change_button_"+key).click();
             }
         });
-
+        input.onclick = function()
+        {
+            Agent.selected.setListenKey(false);
+        }
+        input.onblur = function()
+        {
+            Agent.selected.setListenKey(true);
+        }
 
         var button = document.createElement('button');
         button.innerHTML = 'Modifier';
