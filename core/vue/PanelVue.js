@@ -66,13 +66,23 @@ class PanelVue {
         input.agent = agent;
         input.onkeydown = this.keyUp;
         input.className = 'form-control';
+        input.addEventListener("keyup", function(event) 
+        {
+            event.preventDefault();
+            if (event.keyCode == 13) {
+                document.getElementById("change_button_"+key).click();
+            }
+        });
+
+
         var button = document.createElement('button');
-        button.innerHTML = 'Change';
+        button.innerHTML = 'Modifier';
         button.className = 'btn btn-success';
         button.agent = agent;
         button.key = key;
         button.input = input;
         button.onclick = update;
+        button.id="change_button_"+key;
         
         var div = document.createElement('div');
         div.className = "col-sm-8";
@@ -136,7 +146,7 @@ class PanelVue {
             var li = document.createElement("li");
             var elementType = elementsTypes[index];
             var element = document.createElement('a');
-            element.innerHTML = 'Create ' + elementType.name;
+            element.innerHTML = 'Créer ' + elementType.name;
             element.href = '#';
             element.id = 'idCreate'+ elementType.name;
             element.onclick = this._createElement;
@@ -149,7 +159,7 @@ class PanelVue {
         
         var li = document.createElement("li");
         var element = document.createElement('a');
-        element.innerHTML = 'Add line';
+        element.innerHTML = 'Ajouter ligne';
         element.id = 'idAddLine';
         element.href = '#';
         element.onclick = this._env.addX;
@@ -170,3 +180,21 @@ class PanelVue {
         return agent;
     }
 }
+
+
+function documentationList() {
+        var elementList = document.getElementById("documentationList");
+        elementList.innerHTML = "";
+        for(var i = 0; i < dict.length; i++)
+        {
+            for(var j = 0; j < dict[i].phrases.length; j++)
+            {
+                var li = document.createElement("li");
+                var element = document.createElement('a');
+                element.innerHTML = dict[i].phrases[j];
+                element.href = '#';
+                li.appendChild(element);
+                elementList.appendChild(li);
+            }
+        }  
+    }

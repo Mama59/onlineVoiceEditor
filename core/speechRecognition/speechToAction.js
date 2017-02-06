@@ -1,10 +1,14 @@
 var allPossiblePhrase = [];
 var allPossibleName = [];
+var allPossibleProperties = [];
 var actionFinished = false;
 
 var selectedAgent = null;
 
 function speechToAction(phrase) {
+
+    if(phrase == "")
+        return;
 
     phrase = phrase.replace(" et 2 ", " et de ");
     console.log("Brut phrase : " + phrase);
@@ -20,6 +24,9 @@ function speechToAction(phrase) {
         //        sleep(300); 
         //}
 
+        //--------------------------------
+        // Si enchainement de la commande de déplacement 
+        //--------------------------------
         phrase = phrasesplited[nbSplit];
         if(phrase.indexOf(" hau") > -1 || phrase.indexOf(" ba") > -1 || phrase.indexOf(" gauc") > -1 || phrase.indexOf(" droi") > -1)
         {
@@ -29,6 +36,9 @@ function speechToAction(phrase) {
                 phrase = "déplacer " + phrase;
         }
 
+        //--------------------------------
+        // Préparation liste de phrases 
+        //--------------------------------
         var possiblePhraseMaxLenght = 0;
         if(allPossiblePhrase.length < 1)
         {
@@ -54,13 +64,44 @@ function speechToAction(phrase) {
             }
         }
 
+        //--------------------------------
+        // Préparation liste de propriétés
+        //--------------------------------
+        var possiblePropertiesMaxLenght = 0;
+        for(var i = 0; i < agents.length; i++)
+        {
+            var properties = Object.keys(agents[i]._opts);
+            for(var j = 0; j < properties.length; j++)
+            {
+                allPossibleProperties.push(properties[j].toLowerCase());
+                if(properties[j].length > possiblePropertiesMaxLenght)
+                    possiblePropertiesMaxLenght = properties[j].length;
+            }
+        }  
+        possiblePropertiesMaxLenght += 20;
+        // Cette partie permet de mettre tout les strings de référence à égalité pour les comparaisons
+        for(var i = 0; i < allPossibleProperties.length; i++)
+        {
+            var tmp = allPossibleProperties[i];
+            for (var j =  allPossibleProperties[i].length; j < possiblePropertiesMaxLenght; j++) {
+                tmp += "&";
+            }
+            allPossibleProperties[i] = tmp;
+        }
+        
         if(phrase == "")
             return;
 
+        //--------------------------------
+        // Préparation liste des names (identifiant de chaque element)
+        //--------------------------------
         allPossibleName = [];
         for(var i = 0; i < agents.length; i++)
             allPossibleName.push(agents[i]._opts.name);
             
+        //--------------------------------
+        // Reconnaissance de l'action
+        //--------------------------------
         match = findBestMatch(phrase, allPossiblePhrase);   
         bestMatch = match.bestMatch;
         bestMatch.target = bestMatch.target.replace(/[_]+/g, '');
@@ -72,6 +113,9 @@ function speechToAction(phrase) {
             return;
         }
 
+        //--------------------------------
+        // Faire l'action correspant à la phrase matcher
+        //--------------------------------
         for(var i = 0; i < dict.length; i++)
         {
             for(var j = 0; j < dict[i].phrases.length; j++)
@@ -94,14 +138,17 @@ var dict = [
             "Mettre un bouton"
         ],
         action: function (phrase) {
-            var myRegexp = /outon (.*)/i;
+            var myRegexp = /(Cré|Met|Ajou).*outon( .*|)/i;
             var match = myRegexp.exec(phrase);
-            var button = panel._createSpecifiedElement('Button');
-
+            
             if(match != null)
             {
-                button._updateOpts("name", match[1])
-                button._updateOpts("value", match[1])
+                var button = panel._createSpecifiedElement('Button');
+                if(match[2] != "")
+                {
+                    button._updateOpts("name", match[2])
+                    button._updateOpts("value", match[2])
+                }
             }
         }
     },
@@ -111,15 +158,18 @@ var dict = [
             "Ajouter un label",
             "Mettre un label"
         ],
-                action: function (phrase) {
-            var myRegexp = /abel (.*)/i;
+        action: function (phrase) {
+            var myRegexp = /(Cré|Met|Ajou).*abel( .*|)/i;
             var match = myRegexp.exec(phrase);
-            var label = panel._createSpecifiedElement('Label');
             
             if(match != null)
             {
-                label._updateOpts("name", match[1])
-                label._updateOpts("value", match[1])
+                var label = panel._createSpecifiedElement('Label');
+                if(match[2] != "")
+                {
+                    label._updateOpts("name", match[2])
+                    label._updateOpts("value", match[2])
+                }
             }
         }
     },
@@ -130,13 +180,16 @@ var dict = [
             "Mettre une image"
         ],
         action: function (phrase) {
-            var myRegexp = /mage (.*)/i;
+            var myRegexp = /(Cré|Met|Ajou).*mage( .*|)/i;
             var match = myRegexp.exec(phrase);
-            var image = panel._createSpecifiedElement('Image');
             
             if(match != null)
             {
-                image._updateOpts("name", match[1])
+                var image = panel._createSpecifiedElement('Image');
+                if(match[2] != "")
+                {
+                    image._updateOpts("name", match[2])
+                }
             }
         }
     },
@@ -147,13 +200,16 @@ var dict = [
             "Mettre une Textarea"
         ],
         action: function (phrase) {
-            var myRegexp = /area (.*)/i;
+            var myRegexp = /(Cré|Met|Ajou).*area( .*|)/i;
             var match = myRegexp.exec(phrase);
-            var textArea = panel._createSpecifiedElement('TextArea');
             
             if(match != null)
             {
-                textArea._updateOpts("name", match[1])
+                var textArea = panel._createSpecifiedElement('TextArea');
+                if(match[2] != "")
+                {
+                    textArea._updateOpts("name", match[2])
+                }
             }
         }
     },
@@ -165,13 +221,17 @@ var dict = [
             
         ],
         action: function (phrase) {
-            var myRegexp = /input (.*)/i;
+            var myRegexp = /(Cré|Met|Ajou).*input( .*|)/i;
             var match = myRegexp.exec(phrase);
-            var input = panel._createSpecifiedElement('Input');
+            
             
             if(match != null)
             {
-                input._updateOpts("name", match[1])
+                var input = panel._createSpecifiedElement('Input');
+                if(match[2] != "")
+                {
+                    input._updateOpts("name", match[2])
+                }
             }
         }
     },
@@ -184,13 +244,16 @@ var dict = [
         action: function (phrase) {
             try
             {
-                var myRegexp = /(\d+)/i;
+                var myRegexp = /(Cré|Met|Ajou).*( \d+)/i;
                 var match = myRegexp.exec(phrase);
                 if(match != null)
                 {
-                    var nbLine = convertLetterNumbersFromGoogleSpeechToInt(match[1])
-                    for(var i = 0; i < nbLine; i++)
-                        document.getElementById('idAddLine').click();
+                    if(match[2] != "")
+                    {
+                        var nbLine = convertLetterNumbersFromGoogleSpeechToInt(match[2])
+                        for(var i = 0; i < nbLine; i++)
+                            document.getElementById('idAddLine').click();
+                    }
                 }
                 else
                     document.getElementById('idAddLine').click();
@@ -255,7 +318,7 @@ var dict = [
                 Changer name avec azerty - 14 16
                 */
 
-                var myRegexp = /(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( de )(.*)( avec | par | en | à | a )(.*)|(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( avec | par | en | à | a )(.*)/i;
+                var myRegexp = /(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( de )(.*)( avec | par | part | en | à | a )(.*)|(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( avec | par | part | en | à | a )(.*)/i;
                 var match = myRegexp.exec(phrase);
                 
                 var property = "";
@@ -283,6 +346,9 @@ var dict = [
 
                 if(property != "")
                 {
+                    bestMatch = findBestMatch(property, allPossibleProperties).bestMatch;
+                    property = bestMatch.target.replace(/[&]+/g, '');
+
                     if(newValue == "rien")
                         Agent.selected._opts[property] = "";
                     else
