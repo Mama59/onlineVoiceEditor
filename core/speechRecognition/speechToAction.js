@@ -293,6 +293,39 @@ var dict = [
     },
     {
         phrases: [
+            "Supprimer xx",
+            "Retirer xx",
+            "Enlever xx",
+        ],
+        action: function (phrase) {
+            try
+            {
+                var myRegexp = /(Supp|Reti|Enl)[^\s]+(.*)/i;
+                var match = myRegexp.exec(phrase);
+                
+                if(match != null)
+                {
+                    var agent = Agent.selected;
+                    if(match[2] != "")
+                    {
+                        bestMatch = findBestMatch(match[2], allPossibleName).bestMatch;
+                        var element = document.getElementById(bestMatch.target);
+                        element.click();
+                        agent = element.agent;
+                    }
+
+                    sma.killAgent(agent);
+                }
+            }
+            catch(e)
+            {
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+                actionFinished = true;
+            }
+        }
+    },
+    {
+        phrases: [
             "Modifier la propriété xx de xx avec xx",
             "Changer la propriété xx de xx avec xx",
             "Modifier la propriété xx de xx en xx",

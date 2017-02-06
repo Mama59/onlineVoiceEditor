@@ -1,5 +1,6 @@
 var panel;
 var agents = [];
+var sma;
 
 class Game {
   constructor() {
@@ -22,6 +23,7 @@ Game.createAgents = function (particules, agents) {
   }
 
   Game.sma = new SMA(agents, config.particules);
+  sma = Game.sma;
   var vue = createVue(config.render || "TableVue", document.getElementById('view'), Game.env);
   Game.env.setSMA(Game.sma);
   Game.sma.addObserver(vue);
