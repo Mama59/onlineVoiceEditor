@@ -3,15 +3,15 @@ class Image extends Agent {
     constructor(x, y, env, html, opts) {
         if (!opts) {
             opts = {
-                name: 'image',
-                src: 'http://www.w3schools.com/css/trolltunga.jpg',
-                width: '',
-                height: ''
+                nom : {attribute : 'name', value : 'image'},
+                source : {attribute : 'src', value : 'http://www.w3schools.com/css/trolltunga.jpg'},
+                largeur : {attribute :'width', value: ''},
+                hauteur : {attribute : 'height', value : ''}
             };
         }
 
-        if (!opts.className) {
-            opts.className = "";
+        if (!opts.classe) {
+            opts.classe = {value: "", attribute: "className"};
         }
 
         super(x, y, env, html, opts);

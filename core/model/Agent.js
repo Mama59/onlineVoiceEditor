@@ -11,8 +11,15 @@ class Agent {
         };
 
         self._opts = opts || {};
-        self._opts.name = 'test' + this.constructor.name;
-        self._opts.size = self._opts.size > 0 && self._opts.size < 13 ? self._opts.size : 1;
+        if (!self._opts.nom) {
+            self._opts.nom = {attribute: 'name', value: 'test' + this.constructor.name};
+        }
+        if (!self._opts.taille) {
+            self._opts.taille = {attribute: 'size', value: 1};
+        }
+        else {
+            self._opts.taille.value = self._opts.taille.value > 0 && self._opts.taille.value < 13 ? self._opts.taille.value : 1;
+        }
         self._countMove = 0;
         self._finishToMove = true;
 
@@ -21,6 +28,8 @@ class Agent {
         self._changeDir = false;
         self.offset = Agent.direction[Math.floor(Math.random() * 8)];
         self._id = "x" + x + "y" + y;
+        self.isAlive = true;
+
         window.onkeydown = function (e) {
             self.onKeyDown(e);
         };
@@ -48,18 +57,18 @@ class Agent {
             this._opts = {};
         }
 
-        if (key == 'size') {
+        if (key == 'taille') {
             var size = parseInt(value);
             if (!isNaN(size)) {
                 var sizeMax = this.getWidthMax();
                 var max = sizeMax.right + 1;
                 if (size <= max) {
-                    this._opts.size = size;
+                    this._opts.taille.value = size;
                 }
             }
         }
         else {
-            this._opts[key] = value;
+            this._opts[key].value = value;
         }
 
         this._env._sma._hasChangedPanel = true;
@@ -118,6 +127,7 @@ class Agent {
     };
 
     die() {
+        this.isAlive = false;
         this._env.killAgent(this);
         this._env._sma._hasChangedPanel = true;
     }
@@ -165,7 +175,7 @@ class Agent {
 
     _perception(pos) {
         try {
-            if (this._env.isFreePos(pos, this._pos, this._opts.size)) {
+            if (this._env.isFreePos(pos, this._pos, this._opts.taille.value)) {
                 return pos;
             }
             else {

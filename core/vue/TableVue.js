@@ -61,20 +61,20 @@ class TableVue {
                 td.id = id;
                 if (agent) {
                     var element = document.createElement(agent._getType());
-                    if (agent._opts && agent._opts.size) {
-                        element.className = agent._opts.className + " col-xs-12";
-                        td.className = "col-xs-" + agent._opts.size;
-                        y += agent._opts.size - 1;
+                    if (agent._opts && agent._opts.taille) {
+                        element.className = agent._opts.classe.value + " col-xs-12";
+                        td.className = "col-xs-" + agent._opts.taille.value;
+                        y += agent._opts.taille.value - 1;
                     }
                     element.innerHTML = agent._html;
                     element.onclick = agent.onclick;
                     element.agent = agent;
-                    element.id = agent._opts.name;
+                    element.id = agent._opts.nom.value;
 
                     if (agent._opts) {
                         for (var name in agent._opts) {
                             var opt = agent._opts[name];
-                            element[name] = opt;
+                            element[opt.attribute] = opt.value;
                         }
                     }
 
