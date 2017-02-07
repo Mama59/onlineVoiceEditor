@@ -10,6 +10,9 @@ class PanelVue {
             this._container.appendChild(this._div);
             this._addElements();
             this._sizeList = 0;
+            var updateBtn = document.getElementById('updateOpts');
+            updateBtn.onclick = this._env.showUpdateOpts;
+            updateBtn.env = this._env;
         }
     }
 
@@ -23,35 +26,44 @@ class PanelVue {
         var agents = this._env.getAgents();
         if (this._env._sma._hasChangedPanel) {
             this._elementList(agents);
+            documentationList();
         }
     };
 
     _elementDetails(agent) {
         var detailsSelected = document.getElementById("detailsSelected");
         detailsSelected.innerHTML = "";
-        var form = document.createElement('div');
-        form.className = 'form-horizontal';
+        if (this._env._showOpts) {
+            var form = document.createElement('div');
+            form.className = 'form-horizontal';
 
-        var div = document.createElement('div');
-        div.className = "col-xs-offset-10 col-xs-1";
+            var buttonOpts = document.createElement('button');
+            buttonOpts.onclick = agent._env.hideUpdateOpts;
+            buttonOpts.innerHTML = 'Cacher les modifications';
+            buttonOpts.className = 'btn btn-default col-xs-offset-8';
+            buttonOpts.env = agent._env;
 
-        var button = document.createElement('button');
-        button.onclick = agent.dieAgent;
-        button.innerHTML = 'Supprimer';
-        button.className = 'btn btn-danger';
-        button.agent = agent;
+            form.appendChild(buttonOpts);
+            var div = document.createElement('div');
+            div.className = "col-xs-offset-10 col-xs-1";
 
-        for (var key in agent._opts) {
-            this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
+            var button = document.createElement('button');
+            button.onclick = agent.dieAgent;
+            button.innerHTML = 'Supprimer';
+            button.className = 'btn btn-danger';
+            button.agent = agent;
+
+            for (var key in agent._opts) {
+                this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
+            }
+            var divDeplace = this._getDivForm(agent, 10, 'case', agent.moveToId, 'deplace', "Déplacer");
+            form.appendChild(divDeplace);
+
+            div.appendChild(button);
+            form.appendChild(div);
+
+            detailsSelected.appendChild(form);
         }
-        var divDeplace = this._getDivForm(agent, 10, 'case', agent.moveToId, 'deplace', "Déplacer");
-        form.appendChild(divDeplace);
-
-        div.appendChild(button);
-        form.appendChild(div);
-
-
-        detailsSelected.appendChild(form);
     }
 
     keyUp(e) {

@@ -16,7 +16,7 @@ and open the template in the editor.
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
-
+    <link rel="stylesheet" type="text/css" href="./style.css">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
@@ -27,38 +27,37 @@ and open the template in the editor.
 </head>
 <body id="body">
 
-    <script src="./config.js"></script>
-    <script src="../core/utils/bootstrap-notify.min.js"></script>
-    <script src="../core/utils/utils.js"></script>
-    <script src="../core/utils/exception/ExceptionBound.js"></script>
-    <script src="../core/utils/exception/SubClassesResponsability.js"></script>
-    <script src="../core/utils/seedrandom.js"></script>
-    <script src="../core/model/Agent.js"></script>
-    <script src="./Bouton.js"></script>
-    <script src="./Div.js"></script>
-    <script src="./Label.js"></script>
-    <script src="./TextArea.js"></script>
-    <script src="./Image.js"></script>
-    <script src="./Paragraphe.js"></script>
-    <script src="./Titre.js"></script>
-    <script src="./Input.js"></script>
-    <script src="../core/model/Game.js"></script>
-    <script src="../core/model/AgentFactory.js"></script>
-    <script src="../core/model/Environment.js"></script>
-    <script src="../core/model/SMA.js"></script>
-    <script src="../core/vue/NulVue.js"></script>
-    <script src="../core/vue/TableVue.js"></script>
-    <script src="../core/vue/PanelVue.js"></script>
-    <script src="../core/vue/Trace.js"></script>
-    <script src="../core/vue/VueFactory.js"></script>
-    <script src="../core/main.js"></script>
-    <script src="../core/speechRecognition/underscore.min.js"></script>
-    <script src="../core/speechRecognition/underscore.string.min.js"></script>
-    <script src="../core/speechRecognition/lodash.js"></script>
-    <script src="../core/speechRecognition/compare-strings.js"></script>
-    <script src="../core/speechRecognition/speechToAction.js"></script>
-    <script src="../core/speechRecognition/speechRecognition.js"></script>
-
+<script src="./config.js"></script>
+<script src="../core/utils/bootstrap-notify.min.js"></script>
+<script src="../core/utils/utils.js"></script>
+<script src="../core/utils/exception/ExceptionBound.js"></script>
+<script src="../core/utils/exception/SubClassesResponsability.js"></script>
+<script src="../core/utils/seedrandom.js"></script>
+<script src="../core/model/Agent.js"></script>
+<script src="./Bouton.js"></script>
+<script src="./Div.js"></script>
+<script src="./Label.js"></script>
+<script src="./TextArea.js"></script>
+<script src="./Image.js"></script>
+<script src="./Paragraphe.js"></script>
+<script src="./Titre.js"></script>
+<script src="./Input.js"></script>
+<script src="../core/model/Game.js"></script>
+<script src="../core/model/AgentFactory.js"></script>
+<script src="../core/model/Environment.js"></script>
+<script src="../core/model/SMA.js"></script>
+<script src="../core/vue/NulVue.js"></script>
+<script src="../core/vue/TableVue.js"></script>
+<script src="../core/vue/PanelVue.js"></script>
+<script src="../core/vue/Trace.js"></script>
+<script src="../core/vue/VueFactory.js"></script>
+<script src="../core/main.js"></script>
+<script src="../core/speechRecognition/underscore.min.js"></script>
+<script src="../core/speechRecognition/underscore.string.min.js"></script>
+<script src="../core/speechRecognition/lodash.js"></script>
+<script src="../core/speechRecognition/compare-strings.js"></script>
+<script src="../core/speechRecognition/speechToAction.js"></script>
+<script src="../core/speechRecognition/speechRecognition.js"></script>
 <div class="col-xs-12" id="componante">
     <div id="core">
         <nav class="navbar navbar-default">
@@ -84,44 +83,53 @@ and open the template in the editor.
                             <ul class="dropdown-menu" id="elementList">
                             </ul>
                         </li>
-                    </ul>
-                    <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                               aria-haspopup="true" aria-expanded="false">Ajouter élément <span class="caret"></span></a>
+                               aria-haspopup="true" aria-expanded="false">Ajouter élément <span
+                                    class="caret"></span></a>
                             <ul class="dropdown-menu" id="addElement">
                             </ul>
                         </li>
+                        <li><a href="#" id="updateOpts">Mofidier</a></li>
+
                     </ul>
                     <div class="navbar-form navbar-nav">
-                        <img id="start_img" src="../ressources/mic.gif" alt="Start" class="img-responsive" style=" margin: -7px; margin-top: 0px;" onclick="startButton(event)">
+                        <img id="start_img" src="../ressources/mic.gif" alt="Start" class="img-responsive"
+                             style=" margin: -7px; margin-top: 0px;" onclick="startButton(event)">
                     </div>
                     <div class="navbar-form navbar-nav">
-                        <textarea disabled style="width:600px; height:35px; max-width: 600px; max-height: 35px; min-height: 35px" id="interimPhraseId" style="margin-left:50px; margin-right:50px; max-height: 30px;"></textarea>
+                        <div style="width:100%" class="col-xs-12">
+                              <textarea disabled id="interimPhraseId" class="col-xs-12"
+                                        style="width: 100%; max-height: 100%;outline: none;resize: none; border: 1px solid #f0f0f0;">
+                        </textarea>
+                        </div>
+
                     </div>
 
 
-                
                     <ul class="dropdown nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
-                                aria-haspopup="true" aria-expanded="false">Documentation<span class="caret"></span></a>
+                               aria-haspopup="true" aria-expanded="false">Doc<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li class="dropdown-submenu">
-                                    <a class="test" tabindex="-1" href="#">Raccourcis clavier <span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a tabindex="-1" href="#">Enter : Valider une propriété ou valider reconnaissnace vocal</a></li>
-                                        <li><a tabindex="-1" href="#">Espace : Imobiliser un élément </a></li>
-                                        <li><a tabindex="-1" href="#">² : Arrêter la reconnaissance vocal</a></li>
-                                        <li><a tabindex="-1" href="#">& : Démarrer la reconnaissance vocal</a></li>
-                                        <li><a tabindex="-1" href="#">Flèches : Déplacer un élément</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu">
-                                    <a class="test" tabindex="-1" href="#" onclick="documentationList()">Phrases orales  <span class="caret"></span></a>
+                                <li class="dropdown-submenu pull-left">
+                                    <a class="test" href="#" onclick="documentationList()">Phrases orales</a>
                                     <ul class="dropdown-menu" id="documentationList">
+                                        <li><a href="#">Second level</a></li>
                                     </ul>
                                 </li>
+                                <li class="dropdown-submenu pull-left">
+                                    <a class="test" href="#">Raccourcis clavier</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a tabindex="-1" href="#">Enter : Valider une propriété ou valider
+                                            reconnaissnace vocal</a></li>
+                                        <li><a href="#">Espace : Imobiliser un élément </a></li>
+                                        <li><a href="#">² : Arrêter la reconnaissance vocal</a></li>
+                                        <li><a href="#">& : Démarrer la reconnaissance vocal</a></li>
+                                        <li><a href="#">Flèches : Déplacer un élément</a></li>
+                                    </ul>
+                                </li>
+
                             </ul>
                         </li>
                     </ul>
@@ -129,20 +137,21 @@ and open the template in the editor.
             </div>
         </nav>
     </div>
-    <div id="view"></div>
     <div id="panel">
         <div id="detailsSelected"></div>
     </div>
+    <div id="view"></div>
+
 </div>
 
 <script>
-$(document).ready(function(){
-  $('.dropdown-submenu a.test').on("click", function(e){
-    $(this).next('ul').toggle();
-    e.stopPropagation();
-    e.preventDefault();
-  });
-});
+    $(document).ready(function () {
+        $('.dropdown-submenu a.test').on("click", function (e) {
+            $(this).next('ul').toggle();
+            e.stopPropagation();
+            e.preventDefault();
+        });
+    });
 </script>
 
 </body>

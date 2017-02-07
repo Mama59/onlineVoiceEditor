@@ -12,6 +12,7 @@ class Environment {
         this._plan = [];
         this._drawBorder = false;
         this._drawId = true;
+        this._showOpts = false;
 
         this._sma = {
             setChanged: function () {
@@ -25,6 +26,18 @@ class Environment {
             }
         }
         this.smaSet = false;
+    };
+
+    showUpdateOpts() {
+        var self = this.env;
+        self._showOpts = true;
+        self._sma._hasChangedPanel = true;
+    };
+
+    hideUpdateOpts() {
+        var self = this.env;
+        self._showOpts = false;
+        self._sma._hasChangedPanel = true;
     };
 
     resetPlan() {
@@ -92,7 +105,7 @@ class Environment {
     setSMA(sma) {
         this._sma = sma;
         this.smaSet = true;
-        //sma.addObserver(this);
+        this._sma._hasChangedPanel = true;
     };
 
     addAgent(agent) {
