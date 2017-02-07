@@ -92,11 +92,8 @@ class Environment {
     };
     
     killAgent(agent) {
-        if (!agent.invulnerable) {
-            this._plan[agent.x()][agent.y()].agent = null;
-            this._sma.killAgent(agent);
-            agent.die();
-        }
+        this._plan[agent.x()][agent.y()].agent = null;
+        this._sma.killAgent(agent);
         this._sma._hasChangedPanel = true;
     };
     

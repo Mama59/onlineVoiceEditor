@@ -32,9 +32,21 @@ class PanelVue {
         var form = document.createElement('div');
         form.className = 'form-horizontal';
         
+        var div = document.createElement('div');
+        div.className = "col-xs-offset-10 col-xs-2";
+        var button = document.createElement('button');
+        button.onclick = agent.dieAgent;
+        button.innerHTML = 'Supprimer';
+        button.className = 'btn btn-danger';
+        button.agent = agent;
+        
+        
         for (var key in agent._opts) {
             this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
         }
+        
+        div.appendChild(button);
+        form.appendChild(div);
         
         detailsSelected.appendChild(form);
     }
@@ -66,22 +78,21 @@ class PanelVue {
         input.agent = agent;
         input.onkeydown = this.keyUp;
         input.className = 'form-control';
-        input.addEventListener("keyup", function(event) 
-        {
+        input.addEventListener("keyup", function (event) {
             event.preventDefault();
             if (event.keyCode == 13) {
-                document.getElementById("change_button_"+key).click();
+                document.getElementById("change_button_" + key).click();
             }
         });
-        input.onclick = function()
-        {
+        
+        input.onclick = function () {
             Agent.selected.setListenKey(false);
-        }
-        input.onblur = function()
-        {
+        };
+        
+        input.onblur = function () {
             Agent.selected.setListenKey(true);
-        }
-
+        };
+        
         var button = document.createElement('button');
         button.innerHTML = 'Modifier';
         button.className = 'btn btn-success';
@@ -89,7 +100,7 @@ class PanelVue {
         button.key = key;
         button.input = input;
         button.onclick = update;
-        button.id="change_button_"+key;
+        button.id = "change_button_" + key;
         
         var div = document.createElement('div');
         div.className = "col-sm-8";
@@ -114,6 +125,8 @@ class PanelVue {
     _elementList(agents) {
         var elementList = document.getElementById("elementList");
         elementList.innerHTML = "";
+        var detailsSelected = document.getElementById("detailsSelected");
+        detailsSelected.innerHTML = "";
         for (var index = 0; index < agents.length; index++) {
             var agent = agents[index];
             if (agent._listenKey) {
@@ -124,7 +137,7 @@ class PanelVue {
             var element = document.createElement('a');
             element.agent = agent;
             element.innerHTML = agent._opts.name;
-            element.id =  agent._opts.name;
+            element.id = agent._opts.name;
             element.href = '#';
             element.onclick = agent.onclick;
             li.appendChild(element);
@@ -155,7 +168,7 @@ class PanelVue {
             var element = document.createElement('a');
             element.innerHTML = 'Créer ' + elementType.name;
             element.href = '#';
-            element.id = 'idCreate'+ elementType.name;
+            element.id = 'idCreate' + elementType.name;
             element.onclick = this._createElement;
             element.env = this._env;
             element.opts = {type: 'number'};
@@ -180,7 +193,7 @@ class PanelVue {
         var type = this.elementType;
         env.addAgent(createAgent(type.name, 0, 0, env, null, null, type.opts));
     }
-
+    
     _createSpecifiedElement(elementType) {
         var agent = createAgent(elementType, 0, 0, this._env, null, null, elementType.opts);
         this._env.addAgent(agent);
@@ -190,18 +203,16 @@ class PanelVue {
 
 
 function documentationList() {
-        var elementList = document.getElementById("documentationList");
-        elementList.innerHTML = "";
-        for(var i = 0; i < dict.length; i++)
-        {
-            for(var j = 0; j < dict[i].phrases.length; j++)
-            {
-                var li = document.createElement("li");
-                var element = document.createElement('a');
-                element.innerHTML = dict[i].phrases[j];
-                element.href = '#';
-                li.appendChild(element);
-                elementList.appendChild(li);
-            }
-        }  
+    var elementList = document.getElementById("documentationList");
+    elementList.innerHTML = "";
+    for (var i = 0; i < dict.length; i++) {
+        for (var j = 0; j < dict[i].phrases.length; j++) {
+            var li = document.createElement("li");
+            var element = document.createElement('a');
+            element.innerHTML = dict[i].phrases[j];
+            element.href = '#';
+            li.appendChild(element);
+            elementList.appendChild(li);
+        }
     }
+}

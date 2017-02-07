@@ -20,7 +20,6 @@ class Agent {
         self._env = env;
         self._changeDir = false;
         self.offset = Agent.direction[Math.floor(Math.random() * 8)];
-        
         self._id = "x" + x + "y" + y;
         window.onkeydown = function (e) {
             self.onKeyDown(e);
@@ -43,7 +42,7 @@ class Agent {
         }
         
         if (key == 'size') {
-            if(!isNaN(parseInt(this._opts.size)))
+            if (!isNaN(parseInt(this._opts.size)))
                 this._opts.size = parseInt(this._opts.size);
         }
         
@@ -60,7 +59,7 @@ class Agent {
     setListenKey(boolean) {
         this._listenKey = boolean;
         this.constructor.letterBox.direction = {x: 0, y: 0};
-        if(boolean)
+        if (boolean)
             Agent.selected = this;
     };
     
@@ -96,20 +95,24 @@ class Agent {
             this.constructor.letterBox.direction = this.constructor.CODE[code];
         }
     }
-
+    
+    dieAgent() {
+        var agent = this.agent;
+        agent.die();
+    };
+    
     die() {
-        this.isAlive = false;
         this._env.killAgent(this);
+        this._env._sma._hasChangedPanel = true;
     }
     
     decide() {
-        if(this.constructor.letterBox.direction.x == 0 && this.constructor.letterBox.direction.y == 0)
-        {
+        if (this.constructor.letterBox.direction.x == 0 && this.constructor.letterBox.direction.y == 0) {
             this._countMove = 0;
             Agent.letterBox.nbMove = 0;
             return;
         }
-            
+        
         if (this._listenKey && (Agent.letterBox.nbMove == 0 || this._countMove < Agent.letterBox.nbMove)) {
             this._finishToMove = false;
             var pos = {
@@ -119,15 +122,14 @@ class Agent {
             if (this._perception(pos)) {
                 this._move(pos);
             }
-            if(Agent.letterBox.nbMove != 0)
+            if (Agent.letterBox.nbMove != 0)
                 this._countMove++;
         }
-        else if(Agent.letterBox.nbMove != 0 && this._countMove >= Agent.letterBox.nbMove)
-        {
+        else if (Agent.letterBox.nbMove != 0 && this._countMove >= Agent.letterBox.nbMove) {
             Agent.letterBox = {lastDirection: {x: 0, y: 0}, direction: {x: 0, y: 0}};
             this._finishToMove = true;
         }
-            
+        
     };
     
     _move(pos) {
