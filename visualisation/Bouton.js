@@ -9,7 +9,7 @@ class Bouton extends Agent {
         }
 
         if (!opts.className) {
-            opts.className = "btn btn-danger btn-xs col-xs-12";
+            opts.className = "btn btn-danger btn-xs";
         }
 
         super(x, y, env, html, opts);

@@ -10,6 +10,7 @@ class Environment {
         this.end = false;
         this.win = false;
         this._plan = [];
+        this._drawBorder = false;
         
         this._sma = {
             setChanged: function () {
