@@ -137,12 +137,6 @@ class PanelVue {
         input.agent = agent;
         input.onkeydown = this.keyUp;
         input.className = 'form-control';
-        input.addEventListener("keyup", function (event) {
-            event.preventDefault();
-            if (event.keyCode == 13) {
-                document.getElementById("change_button_" + key).click();
-            }
-        });
 
         input.onclick = function () {
             Agent.selected.setListenKey(false);
@@ -211,7 +205,7 @@ class PanelVue {
             {name: 'Image'},
             {name: 'TextArea'},
             {name: 'Paragraphe'},
-            {name: 'H'},
+            {name: 'Titre'},
             {
                 name: 'Input',
                 opts: {
