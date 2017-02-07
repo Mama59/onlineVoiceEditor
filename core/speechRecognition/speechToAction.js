@@ -139,13 +139,28 @@ var dict = [
             "Mettre la grille",
         ],
         action: function (phrase) {
-            var myRegexp = /(Affic.*|Met.*|Montr.*) la gri.*/i;
+            var myRegexp = /(Affic.*|Met.*|Montr.*) .* gri.*/i;
             var match = myRegexp.exec(phrase);
             
             if(match != null)
             {
-                Agent.selected._env._drawBorder = true;
-                Agent.selected._env._sma._hasChangedPanel = true;
+                Agent.selected._env.showBorder(event, Agent.selected._env);
+            }
+        }
+    },
+    {
+        phrases: [
+            "Afficher les options",
+            "Montrer les options",
+            "Mettre les options",
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Affic.*|Met.*|Montr.*) .* opt.*/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                Agent.selected._env.showUpdateOpts(event, Agent.selected._env);
             }
         }
     },
@@ -168,13 +183,12 @@ var dict = [
             "Mettre les habits"
         ],
         action: function (phrase) {
-            var myRegexp = /(Affi.*|Montr.*|Met.*) les (num.*|id.*|heid.*|habi.*)/i;
+            var myRegexp = /(Affi.*|Montr.*|Met.*) .* (num.*|id.*|heid.*|habi.*)/i;
             var match = myRegexp.exec(phrase);
             
             if(match != null)
             {
-                Agent.selected._env._drawId = true;
-                Agent.selected._env._sma._hasChangedPanel = true;
+                Agent.selected._env.showCase(event, Agent.selected._env);
             }
         }
     },
@@ -185,13 +199,28 @@ var dict = [
             "Enlèver la grille",
         ],
         action: function (phrase) {
-            var myRegexp = /(Cach.*|Reti.*|Enlè.*) la gri.*/i;
+            var myRegexp = /(Cach.*|Reti.*|Enlè.*) .* gri.*/i;
             var match = myRegexp.exec(phrase);
             
             if(match != null)
             {
-                Agent.selected._env._drawBorder = false;
-                Agent.selected._env._sma._hasChangedPanel = true;
+                Agent.selected._env.hideBorder(event, Agent.selected._env);
+            }
+        }
+    },
+    {
+        phrases: [
+            "Cacher les options",
+            "Retirer les options",
+            "Enlèver les options",
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Cach.*|Reti.*|Enlè.*) .* opt.*/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                Agent.selected._env.hideUpdateOpts(event, Agent.selected._env);
             }
         }
     },
@@ -214,13 +243,12 @@ var dict = [
             "Enlèver les habits"
         ],
         action: function (phrase) {
-            var myRegexp = /(Cach.*|Reti.*|Enlè.*) les (num.*|id.*|heid.*|habi.*)/i;
+            var myRegexp = /(Cach.*|Reti.*|Enlè.*) .* (num.*|id.*|heid.*|habi.*)/i;
             var match = myRegexp.exec(phrase);
             
             if(match != null)
             {
-                Agent.selected._env._drawId = false;
-                Agent.selected._env._sma._hasChangedPanel = true;
+                Agent.selected._env.hideCase(event, Agent.selected._env);
             }
         }
     },

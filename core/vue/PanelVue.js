@@ -63,6 +63,7 @@ class PanelVue {
             }
             showCase.className = 'btn btn-primary col-xs-offset-5';
             showCase.env = agent._env;
+            showCase.id="idShowCaseButton";
 
             form.appendChild(showCase);
 

@@ -28,38 +28,50 @@ class Environment {
         this.smaSet = false;
     };
 
-    showBorder() {
+    showBorder(event, env) {
         var self = this.env;
+        if(!isEmptyOrNull(env))
+            self = env;
         self._drawBorder = true;
         self._sma._hasChangedPanel = true;
     };
 
-    hideBorder() {
+    hideBorder(event, env) {
         var self = this.env;
+        if(!isEmptyOrNull(env))
+            self = env;
         self._drawBorder = false;
         self._sma._hasChangedPanel = true;
     };
 
-    showCase() {
+    showCase(event, env) {
         var self = this.env;
+        if(!isEmptyOrNull(env))
+            self = env;
         self._drawCase = true;
         self._sma._hasChangedPanel = true;
     };
 
-    hideCase() {
+    hideCase(event, env) {
         var self = this.env;
+        if(!isEmptyOrNull(env))
+            self = env;
         self._drawCase = false;
         self._sma._hasChangedPanel = true;
     };
 
-    showUpdateOpts() {
+    showUpdateOpts(event, env) {
         var self = this.env;
+        if(!isEmptyOrNull(env))
+            self = env;
         self._showOpts = true;
         self._sma._hasChangedPanel = true;
     };
 
-    hideUpdateOpts() {
+    hideUpdateOpts(event, env) {
         var self = this.env;
+        if(!isEmptyOrNull(env))
+            self = env;
         self._showOpts = false;
         self._sma._hasChangedPanel = true;
     };
