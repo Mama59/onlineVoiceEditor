@@ -31,10 +31,13 @@ function speechToAction(phrase) {
         phrase = phrasesplited[nbSplit];
         if(phrase.indexOf(" hau") > -1 || phrase.indexOf(" ba") > -1 || phrase.indexOf(" gauc") > -1 || phrase.indexOf(" droi") > -1)
         {
-            if(!(phrase.startsWith("déplacer de")  || phrase.startsWith("bouger de")))
-                phrase = "déplacer de " + phrase;
-            else if(!(phrase.startsWith("déplacer ") || phrase.startsWith("bouger ")))
-                phrase = "déplacer " + phrase;
+            if(!(phrase.indexOf(" hauteur") > -1))
+            {
+                if(!(phrase.startsWith("déplacer de")  || phrase.startsWith("bouger de")))
+                    phrase = "déplacer de " + phrase;
+                else if(!(phrase.startsWith("déplacer ") || phrase.startsWith("bouger ")))
+                    phrase = "déplacer " + phrase;
+            }
         }
 
         //--------------------------------
@@ -98,7 +101,7 @@ function speechToAction(phrase) {
         //--------------------------------
         allPossibleName = [];
         for(var i = 0; i < agents.length; i++)
-            allPossibleName.push(agents[i]._opts.name);
+            allPossibleName.push(agents[i]._opts.nom.value);
             
         //--------------------------------
         // Reconnaissance de l'action
@@ -516,7 +519,7 @@ var dict = [
                 Changer name avec azerty - 14 16
                 */
 
-                var myRegexp = /(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( de )(.*)( avec | par | part | en | à | a )(.*)|(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( avec | par | part | en | à | a )(.*)/i;
+                var myRegexp = /(modi[^\s]+|chang[^\s]+) (.* propriété |)((le|la) |)(.*)( de )(.*)( avec | par | part | en | à | a )(.*)|(modi[^\s]+|chang[^\s]+) (.* propriété |la |le |sa |son |)((le|la) |)(.*)( avec | par | part | en | à | a )(.*)/i;
                 var match = myRegexp.exec(phrase);
                 
                 var property = "";
@@ -536,7 +539,7 @@ var dict = [
                 }
 
                 if(elementName == "")
-                    elementName = Agent.selected._opts.name;
+                    elementName = Agent.selected._opts.nom.value;
 
                 bestMatch = findBestMatch(elementName, allPossibleName).bestMatch;
                 var element = document.getElementById(bestMatch.target);
