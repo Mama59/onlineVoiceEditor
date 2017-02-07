@@ -94,7 +94,6 @@ class TableVue {
                 td.style = style;
 
                 if (agent && agent._listenKey) {
-                    //td.style = " border-style: solid;border-color: red;";
                     td.style = "box-shadow: 2px 2px 2px 2px orange ";
                 }
                 tr.appendChild(td);
