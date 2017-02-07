@@ -1,6 +1,6 @@
 class PanelVue {
     constructor(HTMLContainer, environment) {
-        
+
         this._env = environment;
         this._container = HTMLContainer;
         if (this._container) {
@@ -12,57 +12,116 @@ class PanelVue {
             this._sizeList = 0;
         }
     }
-    
+
     update(agents) {
         if (this._container) {
             this._repaint(agents);
         }
     };
-    
+
     _repaint() {
         var agents = this._env.getAgents();
         if (this._env._sma._hasChangedPanel) {
             this._elementList(agents);
         }
     };
-    
+
     _elementDetails(agent) {
         var detailsSelected = document.getElementById("detailsSelected");
         detailsSelected.innerHTML = "";
         var form = document.createElement('div');
         form.className = 'form-horizontal';
-        
+
         var div = document.createElement('div');
         div.className = "col-xs-offset-10 col-xs-1";
+
         var button = document.createElement('button');
         button.onclick = agent.dieAgent;
         button.innerHTML = 'Supprimer';
         button.className = 'btn btn-danger';
         button.agent = agent;
-        
-        
+
         for (var key in agent._opts) {
             this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
         }
-        
+        var divDeplace = this._getDivForm(agent, 10, 'case', agent.moveToId, 'deplace', "Déplacer");
+        form.appendChild(divDeplace);
+
         div.appendChild(button);
         form.appendChild(div);
-        
+
+
         detailsSelected.appendChild(form);
     }
-    
-    
+
     keyUp(e) {
         var event = e || window.event;
         var charCode = event.which || event.keyCode;
         if (charCode == '13') {
             if (this.checkValidity()) {
-                var agent = this.agent;
-                agent._updateOpts(this.id, this.value);
+                if (this.id === 'case') {
+                    document.getElementById(this.idButton).click();
+                }
+                else {
+                    var agent = this.agent;
+                    agent._updateOpts(this.id, this.value);
+                }
             }
         }
     };
-    
+
+
+    _getDivForm(agent, value, key, func, idButton, textButton) {
+        var divForm = document.createElement('div');
+        divForm.className = "form-group";
+        var label = document.createElement('label');
+        label.innerHTML = key + ": ";
+        label.className = "control-label col-sm-2";
+        label.for = key;
+
+        var input = document.createElement('input');
+        input.type = 'text';
+        input.value = value;
+        input.id = key;
+        input.agent = agent;
+        input.onkeydown = this.keyUp;
+        input.className = 'form-control';
+        input.idButton = idButton;
+        input.onclick = function () {
+            Agent.selected.setListenKey(false);
+        };
+
+        input.onblur = function () {
+            Agent.selected.setListenKey(true);
+        };
+
+        var button = document.createElement('button');
+        button.innerHTML = textButton;
+        button.className = 'btn btn-success';
+        button.agent = agent;
+        button.key = key;
+        button.input = input;
+        button.onclick = func;
+        button.id = idButton;
+
+        var div = document.createElement('div');
+        div.className = "col-sm-8";
+        div.appendChild(input);
+
+        if (key == 'size') {
+            input.type = 'number';
+            input.min = 1;
+            var sizeMax = agent.getWidthMax();
+            input.max = sizeMax.right + 1;
+        }
+
+        divForm.appendChild(label);
+        divForm.appendChild(div);
+        divForm.appendChild(button);
+
+        return divForm;
+    }
+
     _addToForm(form, agent, value, key, update) {
         var divForm = document.createElement('div');
         divForm.className = "form-group";
@@ -70,7 +129,7 @@ class PanelVue {
         label.innerHTML = key + ": ";
         label.className = "control-label col-sm-2";
         label.for = key;
-        
+
         var input = document.createElement('input');
         input.type = 'text';
         input.value = value;
@@ -84,15 +143,15 @@ class PanelVue {
                 document.getElementById("change_button_" + key).click();
             }
         });
-        
+
         input.onclick = function () {
             Agent.selected.setListenKey(false);
         };
-        
+
         input.onblur = function () {
             Agent.selected.setListenKey(true);
         };
-        
+
         var button = document.createElement('button');
         button.innerHTML = 'Modifier';
         button.className = 'btn btn-success';
@@ -101,27 +160,26 @@ class PanelVue {
         button.input = input;
         button.onclick = update;
         button.id = "change_button_" + key;
-        
+
         var div = document.createElement('div');
         div.className = "col-sm-8";
         div.appendChild(input);
-        
+
         if (key == 'size') {
             input.type = 'number';
             input.min = 1;
             var sizeMax = agent.getWidthMax();
             input.max = sizeMax.right + 1;
         }
-        
+
         divForm.appendChild(label);
         divForm.appendChild(div);
         divForm.appendChild(button);
-        
+
         form.appendChild(divForm);
-        
     }
-    
-    
+
+
     _elementList(agents) {
         var elementList = document.getElementById("elementList");
         elementList.innerHTML = "";
@@ -132,7 +190,7 @@ class PanelVue {
             if (agent._listenKey) {
                 this._elementDetails(agent);
             }
-            
+
             var li = document.createElement("li");
             var element = document.createElement('a');
             element.agent = agent;
@@ -144,7 +202,7 @@ class PanelVue {
             elementList.appendChild(li);
         }
     }
-    
+
     _addElements() {
         var elementsTypes = [
             {name: 'Bouton'},
@@ -153,7 +211,7 @@ class PanelVue {
             {name: 'Image'},
             {name: 'TextArea'},
             {name: 'Paragraphe'},
-            {name: 'Titre'},
+            {name: 'H'},
             {
                 name: 'Input',
                 opts: {
@@ -161,7 +219,7 @@ class PanelVue {
                 }
             }
         ];
-        
+
         var addElement = document.getElementById("addElement");
         addElement.innerHTML = "";
         for (var index in elementsTypes) {
@@ -178,7 +236,7 @@ class PanelVue {
             li.appendChild(element);
             addElement.appendChild(li);
         }
-        
+
         var li = document.createElement("li");
         var element = document.createElement('a');
         element.innerHTML = 'Ajouter ligne';
@@ -189,13 +247,13 @@ class PanelVue {
         li.appendChild(element);
         addElement.appendChild(li);
     }
-    
+
     _createElement() {
         var env = this.env;
         var type = this.elementType;
         env.addAgent(createAgent(type.name, 0, 0, env, null, null, type.opts));
     }
-    
+
     _createSpecifiedElement(elementType) {
         var agent = createAgent(elementType, 0, 0, this._env, null, null, elementType.opts);
         this._env.addAgent(agent);

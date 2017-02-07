@@ -2,7 +2,7 @@ class Environment {
     constructor(x, y, toric) {
         this.init(x, y, toric);
     }
-    
+
     init(x, y, toric) {
         this._x = x || 50;
         this._y = y || 50;
@@ -11,12 +11,13 @@ class Environment {
         this.win = false;
         this._plan = [];
         this._drawBorder = false;
-        
+        this._drawId = true;
+
         this._sma = {
             setChanged: function () {
             }
         }; //mock before set sma
-        
+
         for (var i = 0; i < this.xSize(); i++) {
             this._plan[i] = [];
             for (var j = 0; j < this._y; j++) {
@@ -25,7 +26,7 @@ class Environment {
         }
         this.smaSet = false;
     };
-    
+
     resetPlan() {
         for (var i = 0; i < this.xSize(); i++) {
             if (!this._plan[i]) {
@@ -38,8 +39,8 @@ class Environment {
             }
         }
     }
-    
-    
+
+
     _resetAllDistance() {
         for (var i = 0; i < this.xSize(); i++) {
             for (var j = 0; j < this._y; j++) {
@@ -47,35 +48,53 @@ class Environment {
             }
         }
     };
-    
+
     isToric() {
         return this._toric;
     };
-    
+
     xSize() {
         if (this._x != config.grid.size.x) {
             this._x = config.grid.size.x;
             this.resetPlan();
         }
-        
+
         return this._x;
     };
-    
+
+    getPosFromId(id) {
+        id = parseInt(id);
+        // var id = parseInt(y) + parseInt(x) * 12;
+        var y = id % 12;
+        var x = (id - y) / 12;
+        return {x: x, y: y};
+    };
+
+    moveToId(agent, id) {
+        id = parseInt(id);
+        var pos = this.getPosFromId(id);
+        if (pos.y < this.ySize() && pos.x < this.xSize()) {
+            if (this.isFreePos(pos, agent._pos, agent._opts.size)) {
+                agent._move(pos);
+            }
+        }
+    };
+
     ySize() {
         if (this._y != config.grid.size.y) {
             this._y = config.grid.size.y;
             this.resetPlan();
         }
-        
+
         return this._y;
     };
-    
+
     setSMA(sma) {
         this._sma = sma;
         this.smaSet = true;
         //sma.addObserver(this);
     };
-    
+
     addAgent(agent) {
         this._plan[agent.x()][agent.y()].agent = agent;
         this._sma.addAgent(agent);
@@ -83,7 +102,7 @@ class Environment {
         agent.setListenKey(true);
         this._sma._hasChangedPanel = true;
     };
-    
+
     removeAllListenKey() {
         var agents = this.getAgents();
         for (var i = 0; i < agents.length; i++) {
@@ -91,26 +110,26 @@ class Environment {
             agentList.setListenKey(false);
         }
     };
-    
+
     killAgent(agent) {
         this._plan[agent.x()][agent.y()].agent = null;
         this._sma.killAgent(agent);
         this._sma._hasChangedPanel = true;
     };
-    
+
     getRandomPos() {
         return {
             x: Math.floor(Math.random() * config.grid.size.x),
             y: Math.floor(Math.random() * config.grid.size.y)
         };
     };
-    
+
     addX() {
         var self = this.env;
         config.grid.size.x++;
         self._sma._hasChangedPanel = true;
     }
-    
+
     getFreeRandomPos() {
         var pos = this.getRandomPos();
         while (!this.isFree(pos)) {
@@ -118,7 +137,7 @@ class Environment {
         }
         return pos;
     };
-    
+
     /* change position on plan
      * return agent if the newPos is already occuped
      */
@@ -130,7 +149,7 @@ class Environment {
         this._sma.setChanged();
         return res;
     };
-    
+
     /* change position on plan
      * erase previous agent if the newPos is already occuped
      */
@@ -139,7 +158,7 @@ class Environment {
         this._plan[newPos.x][newPos.y].agent = agent;
         this._sma.setChanged();
     };
-    
+
     _handleBound(newPos) {
         if (this._toric) {
             if (newPos.x >= this.xSize() || newPos.x < 0) {
@@ -157,7 +176,7 @@ class Environment {
             }
         }
     };
-    
+
     _handleBound(newPos, size) {
         if (this._toric) {
             if (newPos.x >= this.xSize() || newPos.x < 0) {
@@ -198,7 +217,7 @@ class Environment {
                 y: pos.y
             },
         ];
-        
+
         for (var index in positions) {
             var position = positions[index];
             try {
@@ -213,10 +232,10 @@ class Environment {
                 //do nothing in this case
             }
         }
-        
+
         return {free: around, notFree: aroundNotFree};
     };
-    
+
     aroundFree(pos) {
         var res = [];
         for (var i = -1; i < 2; i++) {
@@ -235,7 +254,7 @@ class Environment {
         }
         return res;
     };
-    
+
     _addToFree(pos, arr) {
         try {
             this._handleBound(pos);
@@ -246,17 +265,17 @@ class Environment {
             //do nothing in this case
         }
     };
-    
+
     getCase(pos) {
         this._handleBound(pos);
         return this._plan[pos.x][pos.y];
     };
-    
+
     isFree(pos) {
         this._handleBound(pos);
         return this._plan[pos.x][pos.y].agent == null;
     };
-    
+
     getFirstLeftAgentOnLine(pos, posAgent) {
         for (var y = pos.y; y > 0; y--) {
             if (y != posAgent.y && this._plan[pos.x][y].agent) {
@@ -265,7 +284,7 @@ class Environment {
         }
         return null;
     }
-    
+
     getFirstRightAgentOnLine(pos, posAgent) {
         for (var y = pos.y; y < this.ySize(); y++) {
             if (y != posAgent.y && this._plan[pos.x][y].agent) {
@@ -274,12 +293,12 @@ class Environment {
         }
         return null;
     }
-    
+
     isFreePos(pos, posAgent, size) {
         if (!posAgent) {
             return this.isFree(pos);
         }
-        
+
         if (this._plan[pos.x][pos.y].agent == null) {
             var agent = this.getFirstRightAgentOnLine(pos, posAgent);
             if (agent) {
@@ -287,14 +306,14 @@ class Environment {
                     return false;
                 }
             }
-            
+
             agent = this.getFirstLeftAgentOnLine(pos, posAgent);
             if (agent) {
                 if (pos.y <= agent._pos.y + agent._opts.size - 1) {
                     return false;
                 }
             }
-            
+
             return true;
         }
         else {
@@ -302,35 +321,35 @@ class Environment {
         }
         return true;
     }
-    
+
     getNumberOfAgents() {
         if (this.smaSet) {
             return this._sma.getNumberOfAgents();
         }
         return {};
     };
-    
+
     getTick() {
         if (this.smaSet) {
             return this._sma.getTick();
         }
         return 0;
     };
-    
+
     getAgent(pos) {
         return this._sma.getAgent(pos);
     };
-    
+
     getAgents() {
         return this._sma.getAgents();
     };
-    
+
     stop(agent) {
         this._sma.stop(agent);
         this.win = agent.isWin;
         this.end = true;
     };
-    
+
     getWidthMax(agent) {
         var left = 0;
         var right = 0;
@@ -340,14 +359,14 @@ class Environment {
             posRight.y++;
             right++;
         }
-        
+
         var posLeft = {x: agent._pos.x, y: agent._pos.y};
         posLeft.y--;
         while (posLeft.y >= 0 && this.isFree(posLeft)) {
             posLeft.y--;
             left++;
         }
-        
+
         var total = left + right;
         return {left: left, right: right, total: total};
     }

@@ -30,6 +30,12 @@ class Agent {
         return this._type;
     }
 
+    moveToId() {
+        var self = this.agent;
+        var id = this.input.value;
+        self._env.moveToId(self, id);
+    };
+
     updateOpts() {
         var self = this.agent;
         var key = this.key;

@@ -50,10 +50,13 @@ class TableVue {
                 var td;
                 td = document.createElement('div');
                 td.className = "col-xs-1";
+                var style = "";
 
                 if (this._env._drawBorder) {
-                    td.style = "border-right:1px; border-top:1px; border-right-style:solid;  border-top-style:solid; border-right-color:grey; border-top-color:grey;";
+                    style += " border-right:1px; border-top:1px; border-right-style:solid;  border-top-style:solid; border-right-color:gainsboro; border-top-color:gainsboro;";
                 }
+                style += " color:gainsboro;";
+                td.style = style;
 
                 td.id = id;
                 if (agent) {
@@ -74,10 +77,16 @@ class TableVue {
                             element[name] = opt;
                         }
                     }
+
                     td.appendChild(element);
                 }
                 else {
-                    td.innerHTML = '&nbsp;';
+                    if (this._env._drawId) {
+                        td.innerHTML = id + '&nbsp;';
+                    }
+                    else {
+                        td.innerHTML = '&nbsp;';
+                    }
                 }
 
                 tr.appendChild(td);
