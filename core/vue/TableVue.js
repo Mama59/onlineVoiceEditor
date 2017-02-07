@@ -46,7 +46,7 @@ class TableVue {
 
             for (var y = 0; y < this._env.ySize(); y++) {
                 var agent = this._env.getCase({x: x, y: y}).agent;
-                var id = parseInt(y) + parseInt(x) * 12;
+                var id = this._env.getIdFromPos({x: x, y: y});
                 var td;
 
                 td = document.createElement('div');

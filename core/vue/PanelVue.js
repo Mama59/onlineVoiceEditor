@@ -40,7 +40,7 @@ class PanelVue {
             for (var key in agent._opts) {
                 this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
             }
-            var divDeplace = this._getDivForm(agent, 10, 'case', agent.moveToId, 'deplace', "Déplacer");
+            var divDeplace = this._getDivForm(agent, agent._env.getIdFromPos(agent._pos), 'case', agent.moveToId, 'deplace', "Déplacer");
             form.appendChild(divDeplace);
 
 

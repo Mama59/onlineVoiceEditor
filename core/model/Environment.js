@@ -99,6 +99,10 @@ class Environment {
         return this._x;
     };
 
+    getIdFromPos(pos){
+      return parseInt(pos.y) + parseInt(pos.x) * 12;
+    };
+
     getPosFromId(id) {
         id = parseInt(id);
         // var id = parseInt(y) + parseInt(x) * 12;
