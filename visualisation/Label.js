@@ -4,20 +4,20 @@ class Label extends Agent {
 
         if (!opts) {
             opts = {
-                name: 'test',
-                value: 'test',
-                width: '',
-                height: ''
+                nom: {attribute: 'name:', value: 'test'},
+                valeur: {attribute: 'value', value: 'test'},
+                largeur: {attribute: 'width', value: ''},
+                hauteur: {attribute: 'height', value: ''}
             };
         }
 
-        if (!opts.value) {
-            opts.value = 'test';
+        if (!opts.valeur) {
+            opts.valeur = {value: "test", attribute: "value"};
         }
 
 
-        if (!opts.className) {
-            opts.className = "";
+        if (!opts.classe) {
+            opts.classe = {value: "", attribute: "className"};
         }
 
         super(x, y, env, html, opts);

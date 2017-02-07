@@ -1,19 +1,19 @@
 class Titre extends Agent {
     
     constructor(x, y, env, html, opts) {
-        
+
         if (!opts) {
             opts = {
-                name: 'test',
-                value: 'test',
-                hSize: 1,
-                width: '',
-                height: '',
+                nom: {attribute: 'name:', value: 'test'},
+                valeur: {attribute: 'value', value: 'test'},
+                largeur: {attribute: 'width', value: ''},
+                hSize : {attribute : 'hSize', value: 1},
+                hauteur: {attribute: 'height', value: ''}
             };
         }
 
-        if (!opts.className) {
-            opts.className = "";
+        if (!opts.classe) {
+            opts.classe = {value: "", attribute: "className"};
         }
         
         super(x, y, env, html, opts);

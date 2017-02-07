@@ -27,15 +27,22 @@ class PanelVue {
         }
 
         var updateBtn = document.getElementById('updateOpts');
-        if (this._env._showOpts) {
-            updateBtn.innerHTML = "Cacher les options";
-            updateBtn.onclick = this._env.hideUpdateOpts;
+        if ((!Agent.selected) || (!Agent.selected.isAlive)) {
+            updateBtn.style.display = 'none';
         }
         else {
-            updateBtn.innerHTML = "Montrer les options";
-            updateBtn.onclick = this._env.showUpdateOpts;
+            updateBtn.style.display = 'block';
+            if (this._env._showOpts) {
+                updateBtn.innerHTML = "Cacher les options";
+                updateBtn.onclick = this._env.hideUpdateOpts;
+            }
+            else {
+                updateBtn.innerHTML = "Montrer les options";
+                updateBtn.onclick = this._env.showUpdateOpts;
+            }
+            updateBtn.env = this._env;
         }
-        updateBtn.env = this._env;
+
     };
 
     _elementDetails(agent) {
@@ -46,7 +53,7 @@ class PanelVue {
             form.className = 'form-horizontal';
 
             for (var key in agent._opts) {
-                this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
+                this._addToForm(form, agent, agent._opts[key].value, key, agent.updateOpts);
             }
             var divDeplace = this._getDivForm(agent, agent._env.getIdFromPos(agent._pos), 'case', agent.moveToId, 'deplace', "Déplacer");
             form.appendChild(divDeplace);
@@ -233,8 +240,8 @@ class PanelVue {
             var li = document.createElement("li");
             var element = document.createElement('a');
             element.agent = agent;
-            element.innerHTML = agent._opts.name;
-            element.id = agent._opts.name;
+            element.innerHTML = agent._opts.nom.value;
+            element.id = agent._opts.nom.value;
             element.href = '#';
             element.onclick = agent.onclick;
             li.appendChild(element);

@@ -4,15 +4,15 @@ class Div extends Agent {
 
         if (!opts) {
             opts = {
-                name: 'test',
-                value: 'test',
-                width: '',
-                height: ''
+                nom: {value: 'test', attribute: 'name'},
+                valeur: {value: 'test', attribute: 'value'},
+                largeur: {value: '', attribute: 'width'},
+                hauteur: {value: '', attribute: 'height'}
             };
         }
 
-        if (!opts.className) {
-            opts.className = "";
+        if (!opts.classe) {
+            opts.classe = {value: "", attribute: "className"};
         }
 
         super(x, y, env, html, opts);
