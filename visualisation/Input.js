@@ -3,7 +3,13 @@ class Input extends Agent {
     constructor(x, y, env, html, opts) {
         
         if (!opts) {
-            opts = {type: 'number', placeholder: ''};
+            opts = {
+                name:'test',
+                type: 'text', 
+                placeholder: '',
+                width: '',
+                height: ''
+            };
         }
         
         if (!opts.className) {

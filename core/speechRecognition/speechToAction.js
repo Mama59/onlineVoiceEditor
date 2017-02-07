@@ -134,6 +134,98 @@ function speechToAction(phrase) {
 var dict = [
     {
         phrases: [
+            "Afficher la grille",
+            "Montrer la grille",
+            "Mettre la grille",
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Affic.*|Met.*|Montr.*) la gri.*/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                Agent.selected._env._drawBorder = true;
+                Agent.selected._env._sma._hasChangedPanel = true;
+            }
+        }
+    },
+    {
+        phrases: [
+            "Afficher les numéros",
+            "Montrer les numéros",
+            "Mettre les numéros",
+            "Afficher les id",
+            "Montrer les id",
+            "Mettre les id",
+            "Afficher les heidi",
+            "Montrer les heidi",
+            "Mettre les heidi",
+            "Afficher les idées",
+            "Montrer les idées",
+            "Mettre les idées",
+            "Afficher les habits",
+            "Montrer les habits",
+            "Mettre les habits"
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Affi.*|Montr.*|Met.*) les (num.*|id.*|heid.*|habi.*)/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                Agent.selected._env._drawId = true;
+                Agent.selected._env._sma._hasChangedPanel = true;
+            }
+        }
+    },
+    {
+        phrases: [
+            "Cacher la grille",
+            "Retirer la grille",
+            "Enlèver la grille",
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Cach.*|Reti.*|Enlè.*) la gri.*/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                Agent.selected._env._drawBorder = false;
+                Agent.selected._env._sma._hasChangedPanel = true;
+            }
+        }
+    },
+    {
+        phrases: [
+            "Cacher les numéros",
+            "Retirer les numéros",
+            "Enlèver les numéros",
+            "Cacher les id",
+            "Retirer les id",
+            "Enlèver les id",
+            "Cacher les heidi",
+            "Retirer les heidi",
+            "Enlèver les heidi",
+            "Cacher les idées",
+            "Retirer les idées",
+            "Enlèver les idées",
+            "Cacher les habits",
+            "Retirer les habits",
+            "Enlèver les habits"
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Cach.*|Reti.*|Enlè.*) les (num.*|id.*|heid.*|habi.*)/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                Agent.selected._env._drawId = false;
+                Agent.selected._env._sma._hasChangedPanel = true;
+            }
+        }
+    },
+    {
+        phrases: [
             "Créer un titre",
             "Ajouter un titre",
             "Mettre un titre"
@@ -324,6 +416,7 @@ var dict = [
                         bestMatch = findBestMatch(match[1], allPossibleName).bestMatch;
                         var element = document.getElementById(bestMatch.target);
                         element.click();
+                        Agent.selected = element.agent;
                     }
                 }
             }
@@ -338,7 +431,7 @@ var dict = [
         phrases: [
             "Supprimer xx",
             "Retirer xx",
-            "Enlever xx",
+            "Enlèver xx",
         ],
         action: function (phrase) {
             try
@@ -420,6 +513,7 @@ var dict = [
                 bestMatch = findBestMatch(elementName, allPossibleName).bestMatch;
                 var element = document.getElementById(bestMatch.target);
                 element.click();
+                Agent.selected = element.agent;
 
                 if(property != "")
                 {
@@ -564,6 +658,7 @@ var dict = [
                         bestMatch = findBestMatch(match[posAgentName], allPossibleName).bestMatch;
                         var element = document.getElementById(bestMatch.target);
                         element.click();
+                        Agent.selected = element.agent;
                     }
                     
                     if(match[posNbMove] != null)
@@ -600,6 +695,73 @@ var dict = [
     },
     {
         phrases: [
+            "Mettre xx en xx",
+            "Déplacer xx en xx",
+            "Bouger xx en xx",
+            "Monter xx en xx",
+            "Descendre xx en xx"
+        ],
+        action: function (phrase) {
+            try
+            {
+                /*
+                Mettre xx en xx - 4 5
+                Déplacer xx en xx - 4 5
+                Bouger xx en xx - 4 5
+                Monter xx en xx - 4 5
+                Descendre xx en xx - 4 5
+                Mettre en xx - 2
+                Déplacer en xx - 2
+                Bouger en xx - 2
+                Monter en xx - 2
+                Descendre en xx - 2
+                */
+                var myRegexp = /(Met[^\s]+|Dépla[^\s]+|Bou[^\s]+|Mont[^\s]+|Desc[^\s]+) en (.*)|(Met[^\s]+|Dépla[^\s]+|Bou[^\s]+|Mont[^\s]+|Desc[^\s]+) (.*)en (.*)/i;
+                var match = myRegexp.exec(phrase);
+                
+                if(match != null)
+                {
+                    if(!isEmptyOrNull(match[4]))
+                    {
+                        bestMatch = findBestMatch(match[4], allPossibleName).bestMatch;
+                        var element = document.getElementById(bestMatch.target);
+                        element.click();
+                        Agent.selected = element.agent;
+                    }
+
+                    var idPos = -1;
+                    if(!isEmptyOrNull(match[5]))
+                    {
+                        idPos = convertLetterNumbersFromGoogleSpeechToInt(match[5]);
+                    } 
+                    else if(!isEmptyOrNull(match[2]))
+                    {
+                        idPos = convertLetterNumbersFromGoogleSpeechToInt(match[2]);
+                    } 
+
+                    if(idPos != -1)
+                    {
+                        document.getElementById("case").value = idPos;
+                        document.getElementById("deplace").click();
+                    }
+                    else
+                        notifyError("Inavlid Id", "Phrase understood : " + phrase);
+                }
+                else
+                    notifyError("No regex matching", "Phrase understood : " + phrase);
+            }
+            catch(e)
+            {
+                notifyError("No regex matching", "Phrase understood : " + phrase);
+            }
+            finally
+            {
+
+            }
+        }
+    },
+    {
+        phrases: [
             "Monter xx de xx",
             "Descendre xx de xx"
         ],
@@ -620,6 +782,7 @@ var dict = [
                         bestMatch = findBestMatch(match[2], allPossibleName).bestMatch;
                         var element = document.getElementById(bestMatch.target);
                         element.click();
+                        Agent.selected = element.agent;
                     }
 
                     if(match[4] != null)

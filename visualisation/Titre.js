@@ -6,7 +6,9 @@ class Titre extends Agent {
             opts = {
                 name: 'test',
                 value: 'test',
-                hSize: 1
+                hSize: 1,
+                width: '',
+                height: '',
             };
         }
 

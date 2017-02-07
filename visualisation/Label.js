@@ -5,7 +5,9 @@ class Label extends Agent {
         if (!opts) {
             opts = {
                 name: 'test',
-                value: 'test'
+                value: 'test',
+                width: '',
+                height: ''
             };
         }
 

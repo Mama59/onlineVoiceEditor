@@ -3,7 +3,12 @@ class TextArea extends Agent {
     constructor(x, y, env, html, opts) {
         
         if (!opts) {
-            opts = {placeholder: ''};
+            opts = {
+                name:'test',
+                placeholder: '',
+                width: '',
+                height: ''
+            };
         }
         
         if (!opts.className) {
