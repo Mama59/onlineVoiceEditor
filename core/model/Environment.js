@@ -11,7 +11,7 @@ class Environment {
         this.win = false;
         this._plan = [];
         this._drawBorder = false;
-        this._drawId = true;
+        this._drawCase = false;
         this._showOpts = false;
 
         this._sma = {
@@ -26,6 +26,30 @@ class Environment {
             }
         }
         this.smaSet = false;
+    };
+
+    showBorder() {
+        var self = this.env;
+        self._drawBorder = true;
+        self._sma._hasChangedPanel = true;
+    };
+
+    hideBorder() {
+        var self = this.env;
+        self._drawBorder = false;
+        self._sma._hasChangedPanel = true;
+    };
+
+    showCase() {
+        var self = this.env;
+        self._drawCase = true;
+        self._sma._hasChangedPanel = true;
+    };
+
+    hideCase() {
+        var self = this.env;
+        self._drawCase = false;
+        self._sma._hasChangedPanel = true;
     };
 
     showUpdateOpts() {

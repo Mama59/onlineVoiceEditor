@@ -82,7 +82,7 @@ class TableVue {
 
                 }
                 else {
-                    if (this._env._drawId) {
+                    if (this._env._drawCase) {
                         td.innerHTML = id + '&nbsp;';
                     }
                     else {

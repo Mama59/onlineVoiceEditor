@@ -37,30 +37,57 @@ class PanelVue {
             var form = document.createElement('div');
             form.className = 'form-horizontal';
 
-            var buttonOpts = document.createElement('button');
-            buttonOpts.onclick = agent._env.hideUpdateOpts;
-            buttonOpts.innerHTML = 'Cacher les modifications';
-            buttonOpts.className = 'btn btn-default col-xs-offset-8';
-            buttonOpts.env = agent._env;
-
-            form.appendChild(buttonOpts);
-            var div = document.createElement('div');
-            div.className = "col-xs-offset-10 col-xs-1";
-
-            var button = document.createElement('button');
-            button.onclick = agent.dieAgent;
-            button.innerHTML = 'Supprimer';
-            button.className = 'btn btn-danger';
-            button.agent = agent;
-
             for (var key in agent._opts) {
                 this._addToForm(form, agent, agent._opts[key], key, agent.updateOpts);
             }
             var divDeplace = this._getDivForm(agent, 10, 'case', agent.moveToId, 'deplace', "Déplacer");
             form.appendChild(divDeplace);
 
-            div.appendChild(button);
-            form.appendChild(div);
+
+
+            var showCase = document.createElement('button');
+            if(agent._env._drawCase) {
+                showCase.onclick = agent._env.hideCase;
+                showCase.innerHTML = 'Masquer les N° de cases';
+            }
+            else{
+                showCase.onclick = agent._env.showCase;
+                showCase.innerHTML = 'Afficher les N° de cases';
+            }
+            showCase.className = 'btn btn-primary col-xs-offset-2';
+            showCase.env = agent._env;
+
+            form.appendChild(showCase);
+
+            var showCase = document.createElement('button');
+            if(agent._env._drawBorder) {
+                showCase.onclick = agent._env.hideBorder;
+                showCase.innerHTML = 'Masquer la grille';
+            }
+            else{
+                showCase.onclick = agent._env.showBorder;
+                showCase.innerHTML = 'Afficher la grille';
+            }
+            showCase.className = 'btn btn-primary col-xs-offset-1';
+            showCase.env = agent._env;
+
+            form.appendChild(showCase);
+
+            var buttonOpts = document.createElement('button');
+            buttonOpts.onclick = agent._env.hideUpdateOpts;
+            buttonOpts.innerHTML = 'Cacher les modifications';
+            buttonOpts.className = 'btn btn-warning col-xs-offset-1';
+            buttonOpts.env = agent._env;
+
+            form.appendChild(buttonOpts);
+
+            var button = document.createElement('button');
+            button.onclick = agent.dieAgent;
+            button.innerHTML = 'Supprimer';
+            button.className = 'btn btn-danger col-xs-offset-1';
+            button.agent = agent;
+
+            form.appendChild(button);
 
             detailsSelected.appendChild(form);
         }
