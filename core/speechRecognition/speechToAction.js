@@ -10,6 +10,7 @@ function speechToAction(phrase) {
     if(phrase == "")
         return;
 
+    phrase = phrase.replace(/(.* s'il te plaît)/ig, '');
     phrase = phrase.replace(" et 2 ", " et de ");
     console.log("Brut phrase : " + phrase);
 
@@ -133,6 +134,48 @@ function speechToAction(phrase) {
 var dict = [
     {
         phrases: [
+            "Créer un titre",
+            "Ajouter un titre",
+            "Mettre un titre"
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Cré|Met|Ajou).*itre( .*|)/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                var button = panel._createSpecifiedElement('Titre');
+                if(match[2] != "")
+                {
+                    button._updateOpts("name", match[2])
+                    button._updateOpts("value", match[2])
+                }
+            }
+        }
+    },
+    {
+        phrases: [
+            "Créer un paragraphe",
+            "Ajouter un paragraphe",
+            "Mettre un paragraphe"
+        ],
+        action: function (phrase) {
+            var myRegexp = /(Cré|Met|Ajou).*graphe( .*|)/i;
+            var match = myRegexp.exec(phrase);
+            
+            if(match != null)
+            {
+                var button = panel._createSpecifiedElement('Paragraphe');
+                if(match[2] != "")
+                {
+                    button._updateOpts("name", match[2])
+                    button._updateOpts("value", match[2])
+                }
+            }
+        }
+    },
+    {
+        phrases: [
             "Créer un bouton",
             "Ajouter un bouton",
             "Mettre un bouton"
@@ -143,7 +186,7 @@ var dict = [
             
             if(match != null)
             {
-                var button = panel._createSpecifiedElement('Button');
+                var button = panel._createSpecifiedElement('Bouton');
                 if(match[2] != "")
                 {
                     button._updateOpts("name", match[2])
@@ -382,12 +425,19 @@ var dict = [
                 {
                     bestMatch = findBestMatch(property, allPossibleProperties).bestMatch;
                     property = bestMatch.target.replace(/[&]+/g, '');
-    
-                    if (newValue == "rien") {
-                        Agent.selected._updateOpts(property, "");
+
+                    if(agentContainProperty(Agent.selected, property))
+                    {
+                        if (newValue == "rien") {
+                            Agent.selected._updateOpts(property, "");
+                        }
+                        else {
+                            Agent.selected._updateOpts(property, convertLetterNumbersFromGoogleSpeechToInt(newValue));
+                        }
                     }
-                    else {
-                        Agent.selected._updateOpts(property, convertLetterNumbersFromGoogleSpeechToInt(newValue));
+                    else
+                    {
+                        notifyError("Property unreconized for this element", "Phrase understood : " + phrase);
                     }
                 }
             }
@@ -640,4 +690,17 @@ function convertLetterNumbersFromGoogleSpeechToInt(str)
     }
 
     return str;
+}
+
+
+function agentContainProperty(agent, property)
+{
+    var properties = Object.keys(agent._opts);
+    for(var j = 0; j < properties.length; j++)
+    {
+        allPossibleProperties.push(properties[j].toLowerCase());
+        if(properties[j] == property)
+            return true;
+    }
+    return false;
 }

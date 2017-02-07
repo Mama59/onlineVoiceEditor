@@ -2,6 +2,7 @@ var final_transcript = '';
 var recognizing = false;
 var previous_final_transcript ='';
 var continueRecognizing = false;
+var interimPhrase = "";
 
 if (!('webkitSpeechRecognition' in window)) {
   upgrade();
@@ -9,7 +10,7 @@ if (!('webkitSpeechRecognition' in window)) {
   //start_button.style.display = 'inline-block';
   var recognition = new webkitSpeechRecognition();
   recognition.continuous = true;
-  recognition.interimResults = false;
+  recognition.interimResults = true;
 
   recognition.onstart = function() {
     recognizing = true;
@@ -48,7 +49,15 @@ if (!('webkitSpeechRecognition' in window)) {
       if (event.results[i].isFinal) {
         final_transcript = event.results[i][0].transcript;
         continueRecognizing = true;
+        interimPhrase = '';
+        document.getElementById("interimPhraseId").innerHTML = interimPhrase;
         recognition.stop();
+      }
+      else
+      {
+        interimPhrase = event.results[i][0].transcript;
+        interimPhrase = interimPhrase.replace(/(.* s'il te plaît)/ig, '');
+        document.getElementById("interimPhraseId").innerHTML = interimPhrase;
       }
     }
   };
@@ -60,6 +69,8 @@ function startButton(event) {
     recognizing = false;
     return;
   }
+
+  interimPhrase = '';
   final_transcript = '';
   recognition.lang = 'fr-FR';
   recognition.start();

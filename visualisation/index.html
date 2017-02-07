@@ -27,37 +27,37 @@ and open the template in the editor.
 </head>
 <body id="body">
 
-<script src="./config.js"></script>
-<script src="../core/utils/bootstrap-notify.min.js"></script>
-<script src="../core/utils/utils.js"></script>
-<script src="../core/utils/exception/ExceptionBound.js"></script>
-<script src="../core/utils/exception/SubClassesResponsability.js"></script>
-<script src="../core/utils/seedrandom.js"></script>
-<script src="../core/model/Agent.js"></script>
-<script src="./Bouton.js"></script>
-<script src="./Div.js"></script>
-<script src="./Label.js"></script>
-<script src="./TextArea.js"></script>
-<script src="./Image.js"></script>
-<script src="./Paragraphe.js"></script>
-<script src="./Titre.js"></script>
-<script src="./Input.js"></script>
-<script src="../core/model/Game.js"></script>
-<script src="../core/model/AgentFactory.js"></script>
-<script src="../core/model/Environment.js"></script>
-<script src="../core/model/SMA.js"></script>
-<script src="../core/vue/NulVue.js"></script>
-<script src="../core/vue/TableVue.js"></script>
-<script src="../core/vue/PanelVue.js"></script>
-<script src="../core/vue/Trace.js"></script>
-<script src="../core/vue/VueFactory.js"></script>
-<script src="../core/main.js"></script>
-<script src="../core/speechRecognition/underscore.min.js"></script>
-<script src="../core/speechRecognition/underscore.string.min.js"></script>
-<script src="../core/speechRecognition/lodash.js"></script>
-<script src="../core/speechRecognition/compare-strings.js"></script>
-<script src="../core/speechRecognition/speechToAction.js"></script>
-<script src="../core/speechRecognition/speechRecognition.js"></script>
+    <script src="./config.js"></script>
+    <script src="../core/utils/bootstrap-notify.min.js"></script>
+    <script src="../core/utils/utils.js"></script>
+    <script src="../core/utils/exception/ExceptionBound.js"></script>
+    <script src="../core/utils/exception/SubClassesResponsability.js"></script>
+    <script src="../core/utils/seedrandom.js"></script>
+    <script src="../core/model/Agent.js"></script>
+    <script src="./Bouton.js"></script>
+    <script src="./Div.js"></script>
+    <script src="./Label.js"></script>
+    <script src="./TextArea.js"></script>
+    <script src="./Image.js"></script>
+    <script src="./Paragraphe.js"></script>
+    <script src="./Titre.js"></script>
+    <script src="./Input.js"></script>
+    <script src="../core/model/Game.js"></script>
+    <script src="../core/model/AgentFactory.js"></script>
+    <script src="../core/model/Environment.js"></script>
+    <script src="../core/model/SMA.js"></script>
+    <script src="../core/vue/NulVue.js"></script>
+    <script src="../core/vue/TableVue.js"></script>
+    <script src="../core/vue/PanelVue.js"></script>
+    <script src="../core/vue/Trace.js"></script>
+    <script src="../core/vue/VueFactory.js"></script>
+    <script src="../core/main.js"></script>
+    <script src="../core/speechRecognition/underscore.min.js"></script>
+    <script src="../core/speechRecognition/underscore.string.min.js"></script>
+    <script src="../core/speechRecognition/lodash.js"></script>
+    <script src="../core/speechRecognition/compare-strings.js"></script>
+    <script src="../core/speechRecognition/speechToAction.js"></script>
+    <script src="../core/speechRecognition/speechRecognition.js"></script>
 
 <div class="col-xs-12" id="componante">
     <div id="core">
@@ -96,6 +96,10 @@ and open the template in the editor.
                     <div class="navbar-form navbar-nav">
                         <img id="start_img" src="../ressources/mic.gif" alt="Start" class="img-responsive" style=" margin: -7px; margin-top: 0px;" onclick="startButton(event)">
                     </div>
+                    <div class="navbar-form navbar-nav">
+                        <textarea disabled style="width:600px; height:35px; max-width: 600px; max-height: 35px; min-height: 35px" id="interimPhraseId" style="margin-left:50px; margin-right:50px; max-height: 30px;"></textarea>
+                    </div>
+
 
                 
                     <ul class="dropdown nav navbar-nav navbar-right">
@@ -114,7 +118,7 @@ and open the template in the editor.
                                     </ul>
                                 </li>
                                 <li class="dropdown-submenu">
-                                    <a class="test" tabindex="-1" href="#" onclick="documentationList()">Phrases oral  <span class="caret"></span></a>
+                                    <a class="test" tabindex="-1" href="#" onclick="documentationList()">Phrases orales  <span class="caret"></span></a>
                                     <ul class="dropdown-menu" id="documentationList">
                                     </ul>
                                 </li>
