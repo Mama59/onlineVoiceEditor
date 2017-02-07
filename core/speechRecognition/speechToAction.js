@@ -382,11 +382,13 @@ var dict = [
                 {
                     bestMatch = findBestMatch(property, allPossibleProperties).bestMatch;
                     property = bestMatch.target.replace(/[&]+/g, '');
-
-                    if(newValue == "rien")
-                        Agent.selected._opts[property] = "";
-                    else
-                        Agent.selected._opts[property] = convertLetterNumbersFromGoogleSpeechToInt(newValue);
+    
+                    if (newValue == "rien") {
+                        Agent.selected._updateOpts(property, "");
+                    }
+                    else {
+                        Agent.selected._updateOpts(property, convertLetterNumbersFromGoogleSpeechToInt(newValue));
+                    }
                 }
             }
             catch(e)
