@@ -314,7 +314,8 @@ var dict = [
                         agent = element.agent;
                     }
 
-                    sma.killAgent(agent);
+                    //sma.killAgent(agent);
+                    agent.die();
                 }
             }
             catch(e)

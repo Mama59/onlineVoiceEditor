@@ -96,6 +96,11 @@ class Agent {
             this.constructor.letterBox.direction = this.constructor.CODE[code];
         }
     }
+
+    die() {
+        this.isAlive = false;
+        this._env.killAgent(this);
+    }
     
     decide() {
         if(this.constructor.letterBox.direction.x == 0 && this.constructor.letterBox.direction.y == 0)
