@@ -13,8 +13,9 @@ class Label extends Agent {
             opts.value = 'test';
         }
 
+
         if (!opts.className) {
-            opts.className = "col-xs-12";
+            opts.className = "";
         }
 
         super(x, y, env, html, opts);

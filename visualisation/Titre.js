@@ -9,9 +9,9 @@ class Titre extends Agent {
                 hSize: 1
             };
         }
-        
+
         if (!opts.className) {
-            opts.className = "col-xs-12";
+            opts.className = "";
         }
         
         super(x, y, env, html, opts);

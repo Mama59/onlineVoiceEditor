@@ -9,11 +9,11 @@ class Image extends Agent {
                 height: ''
             };
         }
-        
+
         if (!opts.className) {
-            opts.className = "img-responsive col-xs-12";
+            opts.className = "";
         }
-        
+
         super(x, y, env, html, opts);
         this._type = 'img';
         this._html = opts.value;
