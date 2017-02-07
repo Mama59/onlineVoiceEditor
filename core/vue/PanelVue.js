@@ -10,9 +10,6 @@ class PanelVue {
             this._container.appendChild(this._div);
             this._addElements();
             this._sizeList = 0;
-            var updateBtn = document.getElementById('updateOpts');
-            updateBtn.onclick = this._env.showUpdateOpts;
-            updateBtn.env = this._env;
         }
     }
 
@@ -28,6 +25,17 @@ class PanelVue {
             this._elementList(agents);
             documentationList();
         }
+
+        var updateBtn = document.getElementById('updateOpts');
+        if (this._env._showOpts) {
+            updateBtn.innerHTML = "Cacher les options";
+            updateBtn.onclick = this._env.hideUpdateOpts;
+        }
+        else {
+            updateBtn.innerHTML = "Montrer les options";
+            updateBtn.onclick = this._env.showUpdateOpts;
+        }
+        updateBtn.env = this._env;
     };
 
     _elementDetails(agent) {
@@ -44,27 +52,26 @@ class PanelVue {
             form.appendChild(divDeplace);
 
 
-
             var showCase = document.createElement('button');
-            if(agent._env._drawCase) {
+            if (agent._env._drawCase) {
                 showCase.onclick = agent._env.hideCase;
                 showCase.innerHTML = 'Masquer les N° de cases';
             }
-            else{
+            else {
                 showCase.onclick = agent._env.showCase;
                 showCase.innerHTML = 'Afficher les N° de cases';
             }
-            showCase.className = 'btn btn-primary col-xs-offset-2';
+            showCase.className = 'btn btn-primary col-xs-offset-5';
             showCase.env = agent._env;
 
             form.appendChild(showCase);
 
             var showCase = document.createElement('button');
-            if(agent._env._drawBorder) {
+            if (agent._env._drawBorder) {
                 showCase.onclick = agent._env.hideBorder;
                 showCase.innerHTML = 'Masquer la grille';
             }
-            else{
+            else {
                 showCase.onclick = agent._env.showBorder;
                 showCase.innerHTML = 'Afficher la grille';
             }
@@ -72,14 +79,6 @@ class PanelVue {
             showCase.env = agent._env;
 
             form.appendChild(showCase);
-
-            var buttonOpts = document.createElement('button');
-            buttonOpts.onclick = agent._env.hideUpdateOpts;
-            buttonOpts.innerHTML = 'Cacher les modifications';
-            buttonOpts.className = 'btn btn-warning col-xs-offset-1';
-            buttonOpts.env = agent._env;
-
-            form.appendChild(buttonOpts);
 
             var button = document.createElement('button');
             button.onclick = agent.dieAgent;
@@ -91,12 +90,12 @@ class PanelVue {
 
 
             var hr = document.createElement('hr');
-            hr.style=" height: 12px;border: 0;box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);";
+            hr.style = " height: 12px;border: 0;box-shadow: inset 0 12px 12px -12px rgba(0, 0, 0, 0.5);";
 
             form.appendChild(hr);
 
             detailsSelected.appendChild(form);
-            
+
         }
     }
 
