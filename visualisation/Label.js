@@ -1,7 +1,3 @@
-Div.js
-/* This agent exchange position if position is already occuped
- */
-
 class Label extends Agent {
 
     constructor(x, y, env, html, opts) {
@@ -17,8 +13,8 @@ class Label extends Agent {
             opts.value = 'test';
         }
 
-        if (!opts.style) {
-            opts.style = "col-xs-12";
+        if (!opts.className) {
+            opts.className = "col-xs-12";
         }
 
         super(x, y, env, html, opts);

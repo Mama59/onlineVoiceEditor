@@ -26,6 +26,10 @@ class Agent {
         };
     }
     
+    _getType() {
+        return this._type;
+    }
+    
     updateOpts() {
         var self = this.agent;
         var key = this.key;

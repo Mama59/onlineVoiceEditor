@@ -1,6 +1,3 @@
-/* This agent exchange position if position is already occuped
- */
-
 class Image extends Agent {
     
     constructor(x, y, env, html, opts) {
@@ -13,8 +10,8 @@ class Image extends Agent {
             };
         }
         
-        if (!opts.style) {
-            opts.style = "img-responsive col-xs-12";
+        if (!opts.className) {
+            opts.className = "img-responsive col-xs-12";
         }
         
         super(x, y, env, html, opts);

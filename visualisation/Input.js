@@ -1,7 +1,3 @@
-Div.js
-/* This agent exchange position if position is already occuped
- */
-
 class Input extends Agent {
     
     constructor(x, y, env, html, opts) {
@@ -10,8 +6,8 @@ class Input extends Agent {
             opts = {type: 'number', placeholder: ''};
         }
         
-        if (!opts.style) {
-            opts.style = "form-control";
+        if (!opts.className) {
+            opts.className = "form-control";
         }
         
         if (!opts.size) {
