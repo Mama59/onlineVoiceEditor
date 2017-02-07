@@ -147,13 +147,13 @@ class PanelVue {
     
     _addElements() {
         var elementsTypes = [
-            {name: 'Button'},
+            {name: 'Bouton'},
             {name: 'Div'},
             {name: 'Label'},
             {name: 'Image'},
             {name: 'TextArea'},
-            {name: 'P'},
-            {name: 'H'},
+            {name: 'Paragraphe'},
+            {name: 'Titre'},
             {
                 name: 'Input',
                 opts: {

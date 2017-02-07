@@ -1,12 +1,11 @@
-class P extends Agent {
+class Paragraphe extends Agent {
     
     constructor(x, y, env, html, opts) {
         
         if (!opts) {
             opts = {
                 name: 'test',
-                value: 'test',
-                hSize: 1
+                value: 'test'
             };
         }
         
