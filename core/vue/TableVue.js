@@ -57,9 +57,9 @@ class TableVue {
                 td.className = "col-xs-1";
                 td.id = id;
                 if (agent) {
-                    var element = document.createElement(agent._type);
+                    var element = document.createElement(agent._getType());
                     if (agent._opts && agent._opts.size) {
-                        element.className = agent._opts.style;
+                        element.className = agent._opts.className;
                         td.className = "col-xs-" + agent._opts.size;
                         y += agent._opts.size - 1;
                     }

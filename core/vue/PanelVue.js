@@ -33,7 +33,7 @@ class PanelVue {
         form.className = 'form-horizontal';
         
         var div = document.createElement('div');
-        div.className = "col-xs-offset-10 col-xs-2";
+        div.className = "col-xs-offset-10 col-xs-1";
         var button = document.createElement('button');
         button.onclick = agent.dieAgent;
         button.innerHTML = 'Supprimer';
@@ -152,6 +152,8 @@ class PanelVue {
             {name: 'Label'},
             {name: 'Image'},
             {name: 'TextArea'},
+            {name: 'P'},
+            {name: 'H'},
             {
                 name: 'Input',
                 opts: {

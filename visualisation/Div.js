@@ -1,6 +1,3 @@
-/* This agent exchange position if position is already occuped
- */
-
 class Div extends Agent {
 
     constructor(x, y, env, html, opts) {
@@ -12,8 +9,8 @@ class Div extends Agent {
             };
         }
 
-        if (!opts.style) {
-            opts.style = "col-xs-12";
+        if (!opts.className) {
+            opts.className = "col-xs-12";
         }
 
         super(x, y, env, html, opts);

@@ -26,6 +26,10 @@ class Agent {
         };
     }
     
+    _getType() {
+        return this._type;
+    }
+    
     updateOpts() {
         var self = this.agent;
         var key = this.key;
@@ -34,16 +38,22 @@ class Agent {
     }
     
     _updateOpts(key, value) {
-        if (this._opts) {
-            this._opts[key] = value;
-        }
-        else {
-            this._opts = {key: value};
+        if (!this._opts) {
+            this._opts = {};
         }
         
         if (key == 'size') {
-            if (!isNaN(parseInt(this._opts.size)))
-                this._opts.size = parseInt(this._opts.size);
+            var size = parseInt(value);
+            if (!isNaN(size)) {
+                var sizeMax = this.getWidthMax();
+                var max = sizeMax.right + 1;
+                if (size <= max) {
+                    this._opts.size = size;
+                }
+            }
+        }
+        else {
+            this._opts[key] = value;
         }
         
         this._env._sma._hasChangedPanel = true;
