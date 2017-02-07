@@ -48,7 +48,7 @@ class Agent {
                 var sizeMax = this.getWidthMax();
                 var max = sizeMax.right + 1;
                 if (size <= max) {
-                    this._opts.size = value;
+                    this._opts.size = size;
                 }
             }
         }
