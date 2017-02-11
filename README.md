@@ -9,9 +9,11 @@ démonstration à la voix : https://www.youtube.com/watch?v=Go5aZ-BP1Xo
 démonstration au clavier & souris : https://www.youtube.com/watch?v=i1xQ9XCtoqg
 
 ## Structure du code source
-![alt tag](http://url/to/img.png)
+![Schema de class simplifié](https://lh6.googleusercontent.com/WJcq1jiZSzm9PtmEsjsPoHvuKeS8Ck5hdMQvTo_0A3NOari00offFaxyFL9v0rLsqQC65NNGL8_Y1iI=w1919-h950-rw)
+
 
 Core : Ensemble des classes pour faire le cœur métier de notre application.
+
     Vue : Ensemble des classes qui nous permettent de gérer l’affichage de notre application.
         PanelVue : Classe qui gère l’affichage du panel de façon général. 
         TableVue : Classe qui gère l’affichage de la grille sur laquelle se déplacent nos agents.
@@ -26,6 +28,7 @@ Core : Ensemble des classes pour faire le cœur métier de notre application.
         SpeechToAction : Classe qui permet de reconnaitre et interpréter les actions demandées vocalement.
 
 Visualisation : Ensemble des classes représentant les élément HTML utilisable par l’utilisateur et héritant donc de la classe Agent.
+
     Bouton : Représente sous forme d’agent un bouton HTML. 
     Label : Représente sous forme d’agent un label HTML. 
     Image : Représente sous forme d’agent une image HTML. 
@@ -35,6 +38,7 @@ Visualisation : Ensemble des classes représentant les élément HTML utilisable
 
 ## Un cas d'utilisation 
 Cas général d'utilisation de l'application avec une commande vocal.
+
     - Initialisation de l'environnement et du Système multi-agent
     - Création du panel
     - Démarrage d'un tick
