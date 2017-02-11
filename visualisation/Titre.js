@@ -18,17 +18,17 @@ class Titre extends Agent {
         
         super(x, y, env, html, opts);
         this._type = 'h';
-        this._html = this._opts.value || 'h';
+        this._html = this._opts.valeur.value || 'h';
     };
     
     _updateOpts(key, value) {
         super._updateOpts(key, value);
-        if (key == 'value') {
+        if (key == 'valeur') {
             this._html = value;
         }
     };
     
     _getType() {
-        return this._type + "" + this._opts.hSize;
+        return this._type + "" + this._opts.hSize.value;
     }
 }

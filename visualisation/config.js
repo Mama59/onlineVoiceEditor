@@ -25,7 +25,7 @@ var config = {
     refresh: 1, //if(tick%refresh == 0)
     particules: {
         //   Button: 2
-        Input: 1
+        Input: 0
     },
     render: "TableVue" // WebGLVue or TableVue
 };

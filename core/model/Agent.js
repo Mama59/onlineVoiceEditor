@@ -49,6 +49,7 @@ class Agent {
         var self = this.agent;
         var key = this.key;
         var value = this.input.value;
+
         self._updateOpts(key, value);
     }
 

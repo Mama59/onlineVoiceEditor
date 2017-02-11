@@ -147,7 +147,7 @@ var dict = [
             
             if(match != null)
             {
-                Agent.selected._env.showBorder(event, Agent.selected._env);
+                env.showBorder(event, env);
             }
         }
     },
@@ -163,7 +163,7 @@ var dict = [
             
             if(match != null)
             {
-                Agent.selected._env.showUpdateOpts(event, Agent.selected._env);
+                env.showUpdateOpts(event, env);
             }
         }
     },
@@ -191,7 +191,7 @@ var dict = [
             
             if(match != null)
             {
-                Agent.selected._env.showCase(event, Agent.selected._env);
+                env.showCase(event, env);
             }
         }
     },
@@ -207,7 +207,7 @@ var dict = [
             
             if(match != null)
             {
-                Agent.selected._env.hideBorder(event, Agent.selected._env);
+                env.hideBorder(event, env);
             }
         }
     },
@@ -223,7 +223,7 @@ var dict = [
             
             if(match != null)
             {
-                Agent.selected._env.hideUpdateOpts(event, Agent.selected._env);
+                env.hideUpdateOpts(event, env);
             }
         }
     },
@@ -251,7 +251,7 @@ var dict = [
             
             if(match != null)
             {
-                Agent.selected._env.hideCase(event, Agent.selected._env);
+                env.hideCase(event, env);
             }
         }
     },
@@ -270,8 +270,8 @@ var dict = [
                 var button = panel._createSpecifiedElement('Titre');
                 if(match[2] != "")
                 {
-                    button._updateOpts("name", match[2])
-                    button._updateOpts("value", match[2])
+                    button._updateOpts("nom", match[2])
+                    button._updateOpts("valeur", match[2])
                 }
             }
         }
@@ -291,8 +291,8 @@ var dict = [
                 var button = panel._createSpecifiedElement('Paragraphe');
                 if(match[2] != "")
                 {
-                    button._updateOpts("name", match[2])
-                    button._updateOpts("value", match[2])
+                    button._updateOpts("nom", match[2])
+                    button._updateOpts("valeur", match[2])
                 }
             }
         }
@@ -312,8 +312,8 @@ var dict = [
                 var button = panel._createSpecifiedElement('Bouton');
                 if(match[2] != "")
                 {
-                    button._updateOpts("name", match[2])
-                    button._updateOpts("value", match[2])
+                    button._updateOpts("nom", match[2])
+                    button._updateOpts("valeur", match[2])
                 }
             }
         }
@@ -333,8 +333,8 @@ var dict = [
                 var label = panel._createSpecifiedElement('Label');
                 if(match[2] != "")
                 {
-                    label._updateOpts("name", match[2])
-                    label._updateOpts("value", match[2])
+                    label._updateOpts("nom", match[2])
+                    label._updateOpts("valeur", match[2])
                 }
             }
         }
@@ -354,7 +354,7 @@ var dict = [
                 var image = panel._createSpecifiedElement('Image');
                 if(match[2] != "")
                 {
-                    image._updateOpts("name", match[2])
+                    image._updateOpts("nom", match[2])
                 }
             }
         }
@@ -374,7 +374,7 @@ var dict = [
                 var textArea = panel._createSpecifiedElement('TextArea');
                 if(match[2] != "")
                 {
-                    textArea._updateOpts("name", match[2])
+                    textArea._updateOpts("nom", match[2])
                 }
             }
         }
@@ -396,7 +396,7 @@ var dict = [
                 var input = panel._createSpecifiedElement('Input');
                 if(match[2] != "")
                 {
-                    input._updateOpts("name", match[2])
+                    input._updateOpts("nom", match[2])
                 }
             }
         }
@@ -747,6 +747,8 @@ var dict = [
                 Monter en xx - 2
                 Descendre en xx - 2
                 */
+
+                phrase = phrase.replace(" mais ", "");
                 var myRegexp = /(Met[^\s]+|Dépla[^\s]+|Bou[^\s]+|Mont[^\s]+|Desc[^\s]+) en (.*)|(Met[^\s]+|Dépla[^\s]+|Bou[^\s]+|Mont[^\s]+|Desc[^\s]+) (.*)en (.*)/i;
                 var match = myRegexp.exec(phrase);
                 
@@ -772,8 +774,11 @@ var dict = [
 
                     if(idPos != -1)
                     {
-                        document.getElementById("case").value = idPos;
-                        document.getElementById("deplace").click();
+                        //elem = document.getElementById("case");
+                        //elem.value = idPos;
+                        //document.getElementById("deplace").click();
+                        env.moveToId(Agent.selected, idPos);
+
                     }
                     else
                         notifyError("Inavlid Id", "Phrase understood : " + phrase);

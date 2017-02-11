@@ -22,13 +22,13 @@ class Label extends Agent {
 
         super(x, y, env, html, opts);
 
-        this._html = opts.value;
+        this._html = opts.valeur.value;  
         this._type = 'label';
     };
 
     _updateOpts(key, value) {
         super._updateOpts(key, value);
-        if (key == 'value') {
+        if (key == 'valeur') {
             this._html = value;
         }
     };
