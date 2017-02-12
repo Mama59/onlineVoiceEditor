@@ -2,11 +2,11 @@
 Projet réalisé par Burléon Junior & Bal Marine & Pansa José
 
 ## Présentation
-Ce projet permet de créer des pages web statique responsive grâce à l'utilisation de la voix ou grâce à au clavier et à la souris et cela sans aucune connaissance de HTML et aucune ou peu de connaissance en CSS.
+Ce projet permet de créer des pages web statique responsive grâce à l'utilisation de la voix ou grâce au clavier et à la souris et cela sans aucune connaissance de HTML et aucune ou peu de connaissance en CSS.
 
 Vous puvez trouvez des vidéo de démonstration ici :
-démonstration à la voix : https://www.youtube.com/watch?v=Go5aZ-BP1Xo
-démonstration au clavier & souris : https://www.youtube.com/watch?v=i1xQ9XCtoqg
+- démonstration à la voix : https://www.youtube.com/watch?v=Go5aZ-BP1Xo
+- démonstration au clavier & souris : https://www.youtube.com/watch?v=i1xQ9XCtoqg
 
 ## Structure du code source
 ![Schema de class simplifié](https://lh6.googleusercontent.com/DkIhnx6fqdZR0Eiqobwiss6vvHFQu5n2SBs0Cs6pzb52LMjFmM78vdUrHXbd3VsD0pdHO79HVMGIR2o=w1919-h950-rw)
