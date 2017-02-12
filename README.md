@@ -48,3 +48,10 @@ Cas général d'utilisation de l'application avec une commande vocal.
         - Modification des données de l'Agent
     - Chaque agent est mis à jour    
     - Et finalement le tick se termine et nous en recommençons un suivant
+
+## Les classes à voir 
+### [SpeechToAction](core/speechRecognition/speechToAction.js)
+### [SMA](core/model/SMA.js)
+### [Index](visualisation/index.html)
+### [Agent](core/model/Agent.js)
+### [SpeechRecognition](core/speechRecognition/speechRecognition.js)
