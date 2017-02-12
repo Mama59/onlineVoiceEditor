@@ -9,7 +9,7 @@ Vous puvez trouvez des vidéo de démonstration ici :
 - démonstration au clavier & souris : https://www.youtube.com/watch?v=i1xQ9XCtoqg
 
 ## Structure du code source
-![Schema de class simplifié](https://lh6.googleusercontent.com/DkIhnx6fqdZR0Eiqobwiss6vvHFQu5n2SBs0Cs6pzb52LMjFmM78vdUrHXbd3VsD0pdHO79HVMGIR2o=w1919-h950-rw)
+![Schema de class simplifié](http://img15.hostingpics.net/pics/894993schemaclass.png)
 
 
 Core : Ensemble des classes pour faire le cœur métier de notre application.
